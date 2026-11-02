@@ -1,0 +1,28 @@
+
+# Environnement R
+# Fichiers intermédiaires du rendu Quarto
+# Fichiers locaux de travail (non versionnés)
+*.aux
+*.bcf
+*.blg
+*.log
+*.run.xml
+*_files/
+.RData
+.Rhistory
+.Rproj.user/
+.agents
+.arena/
+.claude/
+.quarto/
+Affinity Propagation.md
+CLAUDE.md
+Rplots.pdf
+exemple de diapositive/
+exemple de démo.md
+exemple de démonstration/
+prompts/
+quality_reports/
+Report/*.tex
+!Report/template.tex
+références bibliographique et méthodologie/
