@@ -127,6 +127,7 @@ Depuis la racine du dépôt :
 
 ```bash
 quarto render Report/Affinity_propagation_rapport.qmd   # rapport PDF (page de titre URCA)
+python3 fiche/make_figures.py   # régénère les figures de la fiche (résultats réels AP)
 quarto render fiche/fiche_synthese.qmd                   # fiche PDF A4 (1 page)
 quarto render slides/slides.qmd                          # diaporama HTML autonome
 ```
@@ -145,8 +146,9 @@ quarto render slides/slides.qmd                          # diaporama HTML autono
 .
 ├── Report/                    rapport PDF + gabarit URCA + bibliography.bib
 │   └── Affinity_propagation_rapport.qmd
-├── fiche/                     fiche de synthèse (1 page)
-│   └── fiche_synthese.qmd
+├── fiche/                     fiche de synthèse (1 page, modèle inspiré de la fiche UMAP)
+│   ├── fiche_synthese.qmd
+│   └── make_figures.py        génère ap_principe / ap_preference / ap_amortissement.png
 ├── slides/                    diaporama (20 min)
 │   └── slides.qmd
 ├── tp/                        TP guidé, données Iris uniquement

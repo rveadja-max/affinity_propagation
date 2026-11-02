@@ -1,59 +1,88 @@
 ---
-title: "Affinity Propagation — fiche de synthèse"
-author:
-  - "Hervé ADJAKOSSA"
-  - "Marie DE AMORIM PEREIRA DA SILVA"
-date: "5 novembre 2026"
+title: ""
 lang: fr
 format:
   pdf:
     papersize: a4
-    geometry: margin=1.4cm
+    geometry: margin=1.3cm
     fontsize: 9pt
+    include-in-header:
+      - text: |
+          \usepackage{tcolorbox}
+          \usepackage{xcolor}
+          \definecolor{apviolet}{HTML}{5B4E8C}
+          \definecolor{apclair}{HTML}{EDEAF6}
+          \definecolor{apaccent}{HTML}{8E7CC3}
+          \usepackage{fancyhdr}
+          \pagestyle{fancy}
+          \fancyhf{}
+          \renewcommand{\headrulewidth}{0pt}
+          \fancyhead[R]{\small\color{apaccent}\textsc{Fiche de synthèse}}
+          \setlength{\parskip}{2pt}
+editor: visual
 ---
 
-<!-- Fiche d'une page A4 stricte, à rendre au plus tard le 03/11/2026. -->
+\begin{center}
+{\LARGE\bfseries\color{apviolet} Affinity Propagation (AP)}\\[1pt]
+{\small Hervé ADJAKOSSA \;·\; Marie DE AMORIM PEREIRA DA SILVA \;·\; Apprentissage non supervisé, 2026}
+\end{center}
 
-**En une phrase.** Affinity Propagation (AP, Frey & Dueck, *Science* 2007) est un algorithme de **clustering** qui choisit des **exemplaires réels** parmi les observations et fait émerger le **nombre de groupes** d'un échange itératif de messages, sans fixer $k$ à l'avance.
+\vspace{-2pt}
+\begin{tcolorbox}[colback=apclair,colframe=apviolet,left=4pt,right=4pt,top=3pt,bottom=3pt,boxrule=0.6pt]
+\textbf{\color{apviolet}En une phrase :} AP regroupe des observations en choisissant, \emph{parmi elles}, des \textbf{exemplaires réels}, et fait \emph{émerger le nombre de groupes} d'un échange itératif de messages --- sans fixer $k$ à l'avance.
+\end{tcolorbox}
 
-## Principe
+\vspace{2pt}
+{\large\bfseries\color{apviolet} Comment fonctionne AP ?}
 
-À partir d'une matrice de **similarités** $s(i,k)$ — souvent moins la distance euclidienne au carré — chaque observation négocie avec les autres via deux messages :
+L'idée tient en trois étapes : chaque observation est candidate à représenter les autres, elles échangent des messages pour se désigner des représentants, puis des exemplaires et leurs clusters émergent.
 
-- **responsabilité** $r(i,k) \leftarrow s(i,k) - \max_{k'\neq k}\{a(i,k')+s(i,k')\}$ : à quel point $x_k$ représenterait bien $x_i$ ;
-- **disponibilité** $a(i,k) \leftarrow \min\{0,\ r(k,k) + \sum_{i'\notin\{i,k\}} \max(0, r(i',k))\}$ : à quel point $x_i$ devrait choisir $x_k$.
+\begin{center}
+\includegraphics[width=0.72\textwidth]{ap_principe.png}
+\end{center}
 
-Les itérations alternent ces mises à jour, **amorties** par $\lambda$ (les messages, pas les préférences) pour éviter les oscillations. $x_k$ devient exemplaire quand $r(k,k)+a(k,k)>0$ ; chaque point rejoint l'exemplaire maximisant $a(i,k)+r(i,k)$. AP maximise une approximation de la somme des similarités aux exemplaires.
+\begin{tcolorbox}[colback=apclair,colframe=apviolet,title=\textbf{BASE THÉORIQUE},colbacktitle=apviolet,coltitle=white,left=4pt,right=4pt,top=2pt,bottom=2pt,boxrule=0.6pt]
+AP part d'une \textbf{matrice de similarités} $s(i,k)$ (souvent $-\lVert x_i-x_k\rVert^2$). Deux messages circulent : la \textbf{responsabilité} $r(i,k)$ ($x_k$ représente-t-il bien $x_i$ ?) et la \textbf{disponibilité} $a(i,k)$ ($x_i$ devrait-il choisir $x_k$ ?). $x_k$ devient exemplaire quand $r(k,k)+a(k,k)>0$. AP maximise une approximation de la somme des similarités aux exemplaires.
+\end{tcolorbox}
 
-## Paramètres clés
+\vspace{2pt}
+{\large\bfseries\color{apviolet} Les 2 paramètres qui changent le plus le résultat}
 
-| Paramètre | Rôle | Réglage usuel |
-|---|---|---|
-| **Préférence** $s(k,k)$ | seuil d'exigence pour devenir exemplaire ; **gouverne le nombre de clusters** | médiane des similarités (défaut) ; minimum → peu de groupes |
-| **Amortissement** $\lambda$ | lisse les messages, stabilise | 0,5 à 0,9 ; plus haut = plus lent |
-| `maxits` / `convits` | budget et critère d'arrêt | 1000 / 100 |
+Ils ne changent pas les données : la \textbf{préférence} pilote le \emph{nombre} de groupes, l'\textbf{amortissement} pilote la \emph{convergence}.
 
-## Pourquoi le nombre de groupes varie
+\begin{center}
+\begin{minipage}[c]{0.52\textwidth}
+\centering
+\includegraphics[width=\textwidth]{ap_preference.png}
+\end{minipage}\hfill
+\begin{minipage}[c]{0.28\textwidth}
+\centering
+\includegraphics[width=\textwidth]{ap_amortissement.png}
+\end{minipage}
+\end{center}
 
-Préférence basse : chaque point accepte d'être représenté par une voisine → **peu** d'exemplaires. Préférence haute : chacun s'estime irremplaçable → **beaucoup** d'exemplaires. Le nombre obtenu dépend donc conjointement des similarités et de ce paramètre : il n'est **jamais « optimal »** et doit être documenté (balayage de sensibilité).
+\vspace{1pt}
+{\large\bfseries\color{apviolet} Comment choisir les paramètres ?}
 
-## AP face aux méthodes de référence
+Pour obtenir **peu de groupes**, on règle la préférence basse (proche du **minimum** des similarités) : chaque point accepte d'être représenté par une voisine. À l'inverse, une préférence haute (proche du maximum) pousse chaque observation à se représenter elle-même et multiplie les groupes. On part généralement de la **médiane**, puis on **balaie** la préférence. Un amortissement **λ élevé (0,9)** stabilise les messages au prix d'un calcul plus long.
 
-K-means impose $k$ et des centroïdes fictifs ; K-medoids impose $k$ mais garde des représentants réels ; la hiérarchique fournit une échelle de regroupements à découper. AP s'affranchit de $k$ avec des exemplaires réels, au prix d'une mémoire en $O(n^2)$ et d'une sensibilité à la préférence (comparaison menée à $k$ fixé dans notre TP).
+\noindent
+\begin{minipage}[t]{0.54\textwidth}
+{\bfseries\color{apviolet} Forces}
+\begin{itemize}\setlength{\itemsep}{0pt}
+\item Pas de $k$ à fixer ; exemplaires réels inspectables.
+\item Déterministe à paramètres fixés.
+\item Accepte des similarités non métriques.
+\end{itemize}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.44\textwidth}
+{\bfseries\color{apviolet} Limites}
+\begin{itemize}\setlength{\itemsep}{0pt}
+\item Mémoire et temps en $O(n^2)$ : jeux petits à moyens.
+\item Nombre de groupes sensible à la préférence.
+\item Oscillations possibles si $\lambda$ trop faible.
+\end{itemize}
+\end{minipage}
 
-## Mise en œuvre (dépôt : dossier `tp/`)
-
-```r
-library(apcluster)
-S <- negDistMat(scale(iris[, 1:4]), r = 2)   # similarité -||xi-xk||^2
-res <- apcluster(S, q = 0.5, lam = 0.9)      # préférence = médiane
-```
-
-```python
-from sklearn.cluster import AffinityPropagation
-ap = AffinityPropagation(damping=0.9, random_state=2026).fit(X_std)
-```
-
-Sur Iris standardisé (résultats reproduits localement) : de 3 clusters ($q=0$, ARI = 0,631) à 9 clusters à la préférence médiane (ARI = 0,354) — le réglage par défaut fragmente la structure. Limites : jeux petits à moyens, préférence à balayer, convergence à surveiller.
-
-**Références :** Frey & Dueck (2007), *Science* 315, 972–976, doi:10.1126/science.1136800 · Bodenhofer et al. (2011), *Bioinformatics* 27(17), doi:10.1093/bioinformatics/btr406 · Brusco & Köhn (2008), *Science* 319, 726, doi:10.1126/science.1150921 · Pedregosa et al. (2011), *JMLR* 12 (scikit-learn).
+\vspace{1pt}
+{\footnotesize\textbf{Références :} Frey \& Dueck (2007), \emph{Science} 315, 972–976, doi:10.1126/science.1136800 · Bodenhofer et al. (2011), \emph{Bioinformatics} 27(17), doi:10.1093/bioinformatics/btr406 · Brusco \& Köhn (2008), \emph{Science} 319, 726, doi:10.1126/science.1150921 · Wang et al. (2013), \emph{IEEE TPAMI} 35(9), doi:10.1109/TPAMI.2013.28. \emph{Figures : résultats réels d'AP (scikit-learn 1.9.1) sur Iris standardisé, régénérables par \texttt{fiche/make\_figures.py}.}}
