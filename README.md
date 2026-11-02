@@ -84,6 +84,12 @@ quarto render fiche/fiche_synthese.qmd                   # PDF A4
 quarto render slides/slides.qmd                          # HTML autonome
 ```
 
+## Documentation
+
+Une documentation complète (objet, installation, exécution du TP pas à pas,
+exemples de sortie, reproductibilité) est fournie dans
+[`DOCUMENTATION.md`](DOCUMENTATION.md).
+
 ## Règles de travail
 
 - **`main` ne reçoit que les livrables finaux**, validés par les deux membres du binôme.

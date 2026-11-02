@@ -35,27 +35,27 @@ editor: visual
 
 # Introduction
 
-Dans le cadre du module d'apprentissage non supervisé, enseigné par Frédéric Blanchard et Philippe Regnault, nous étudions l'algorithme **Affinity Propagation** (propagation d'affinité, AP dans la suite), proposé par @frey2007clustering.
+Le présent rapport a été rédigé dans le cadre du module d'apprentissage non supervisé, enseigné par Frédéric Blanchard et Philippe Regnault. Il est consacré à l'algorithme **Affinity Propagation** (propagation d'affinité, AP dans la suite), introduit par @frey2007clustering. Ce travail a pour objet d'expliquer le fonctionnement de la méthode, d'en préciser les fondements mathématiques et les limites, puis d'en illustrer la mise en œuvre sur un cas d'usage reproductible.
 
-L'apprentissage automatique consiste à utiliser des algorithmes pour apprendre des structures, des relations ou des règles à partir de données, plutôt que de programmer manuellement toutes les règles. On distingue classiquement l'apprentissage **supervisé**, qui apprend une relation entre des données et des résultats connus afin de prédire ces résultats sur de nouvelles observations, de l'apprentissage **non supervisé**, qui travaille sur des données sans étiquettes et cherche à en révéler l'organisation. Ce projet relève de la seconde famille, et plus précisément du *clustering* : répartir des observations en groupes homogènes, appelés clusters, sans connaître ces groupes à l'avance.
+L'apprentissage automatique peut être défini comme l'ensemble des procédures par lesquelles une structure, une relation ou une règle est extraite de données, sans que toutes les règles aient été programmées explicitement. Il est d'usage de distinguer l'apprentissage **supervisé**, dans lequel une relation entre des données et des résultats connus est apprise afin d'être généralisée à de nouvelles observations, de l'apprentissage **non supervisé**, dans lequel les données sont dépourvues d'étiquettes et où une organisation sous-jacente est recherchée. Le présent projet relève de la seconde famille et, plus précisément, du *clustering* : il s'agit de répartir des observations en groupes homogènes, ou clusters, sans que ces groupes soient connus à l'avance.
 
-Un algorithme est un processus systématique de résolution d'un problème ; un algorithme d'apprentissage automatique utilise les données pour construire la solution. Il existe de nombreuses méthodes de clustering parce que les problèmes ne se ressemblent pas : partitionnement (K-means), hiérarchie (regroupement ascendant), densité (DBSCAN), et propagation de messages, qui est la voie d'AP.
+Parmi les nombreuses méthodes de clustering, AP occupe une place particulière qui justifie qu'on s'y arrête. Là où K-means impose de fixer le nombre de groupes et représente chacun d'eux par un centroïde fictif, AP fait émerger le nombre de groupes et choisit comme représentants des **observations réelles**, appelées exemplaires. Cette propriété, qui peut sembler anecdotique, s'avère déterminante dans les applications où un représentant concret et inspectable est recherché — sélection de prototypes, de conditions expérimentales ou de documents représentatifs. Nous faisons l'hypothèse, que ce rapport se propose d'étayer, que cette particularité constitue à la fois la principale force d'AP et la source de sa principale difficulté pratique : la sensibilité du nombre de groupes au paramètre de préférence.
 
-Dans ce rapport, nous expliquons le fonctionnement d'AP, ses fondements mathématiques, ses paramètres et ses limites, puis nous l'appliquons au jeu de données Iris en R (package `apcluster`) et en Python (`scikit-learn`), avec une comparaison à K-means, K-medoids et à la classification hiérarchique. Le code complet et reproductible est fourni dans le dépôt Git (`tp/`).
+Le rapport est organisé comme suit. La seconde partie motive le recours à AP et situe la méthode parmi les familles de clustering. Les fondements mathématiques sont exposés en troisième partie, puis le contexte d'utilisation est précisé en quatrième partie. La cinquième partie présente une application reproductible au jeu de données Iris, en R (`apcluster`) et en Python (`scikit-learn`), accompagnée d'exemples concrets avant/après et d'une comparaison à K-means, K-medoids et à la classification hiérarchique. Les enseignements de la littérature sont synthétisés en sixième partie, avant une discussion critique et une conclusion. L'ensemble du code est fourni dans le dépôt Git (`tp/`) afin que chaque résultat rapporté puisse être reproduit.
 
 # Pourquoi faire appel à Affinity Propagation ?
 
 ## Le problème pratique
 
-Dans de nombreuses situations réelles, on souhaite regrouper des objets — profils de patients, séquences génétiques, conditions expérimentales, documents — **sans savoir combien de groupes** il convient de former, et en souhaitant que chaque groupe soit représenté par un **objet réel** plutôt que par une moyenne abstraite.
+Dans de nombreuses situations réelles, il est souhaité de regrouper des objets — profils de patients, séquences génétiques, conditions expérimentales, documents — **sans que le nombre de groupes soit connu** à l'avance, et en souhaitant que chaque groupe soit représenté par un **objet réel** plutôt que par une moyenne abstraite.
 
-K-means, la méthode de référence, impose deux choix gênants : fixer le nombre de groupes $k$ avant l'analyse, et représenter chaque groupe par son centroïde, un point moyen qui n'existe pas dans les données. Quand le but est de sélectionner des cas typiques à examiner de près — un prototype à fabriquer, un document à lire, une condition expérimentale à reproduire —, un représentant fictif ne convient pas.
+La méthode de référence, K-means, impose deux choix qui peuvent s'avérer contraignants : le nombre de groupes $k$ doit être fixé avant l'analyse, et chaque groupe est représenté par son centroïde, c'est-à-dire un point moyen qui n'existe pas nécessairement dans les données. Lorsque l'objectif est de sélectionner des cas typiques destinés à être examinés de près — un prototype à fabriquer, un document à lire, une condition expérimentale à reproduire —, un représentant fictif ne convient généralement pas.
 
 ## Ce qu'AP apporte
 
-AP répond à ces deux limites : il choisit comme représentants des **exemplaires** (*exemplars*) pris **parmi les observations elles-mêmes**, et il **ne demande pas de fixer le nombre de clusters à l'avance** [@frey2007clustering]. Ce nombre émerge de l'algorithme, piloté par un paramètre de **préférence** qui exprime, pour chaque observation, sa propension à devenir exemplaire.
+À ces deux limites, AP apporte une réponse directe : les représentants choisis sont des **exemplaires** (*exemplars*) pris **parmi les observations elles-mêmes**, et il **n'est pas nécessaire de fixer le nombre de clusters à l'avance** [@frey2007clustering]. Ce nombre émerge de l'algorithme, sous le contrôle d'un paramètre de **préférence** qui exprime, pour chaque observation, sa propension à devenir exemplaire.
 
-Cas d'usage documentés dans la littérature : regroupement de gènes par profil d'expression [@leone2007clustering], sélection de conditions expérimentales représentatives en combustion [@wang2024gsap], amélioration du réglage d'AP par méta-heuristiques [@sinha2025affinity] et suivi incrémental de clusters dans des corpus diachroniques [@periti2025incremental]. Un carnet de démonstration en Python, qui reprend l'exemple officiel de scikit-learn, a également guidé notre mise en œuvre [@tirthajyoti_ap].
+Plusieurs cas d'usage documentés dans la littérature peuvent être mentionnés : le regroupement de gènes par profil d'expression [@leone2007clustering], la sélection de conditions expérimentales représentatives en combustion [@wang2024gsap], la localisation intérieure par regroupement de points de référence [@jin2026localization], l'aide à la décision ferroviaire [@chtioui2025these], ainsi que le suivi incrémental de clusters dans des corpus diachroniques [@periti2025incremental]. Un carnet de démonstration en Python, qui reprend l'exemple officiel de scikit-learn, a par ailleurs guidé notre mise en œuvre [@tirthajyoti_ap].
 
 ## Positionnement dans la zoologie des méthodes
 
@@ -65,7 +65,7 @@ Le clustering regroupe plusieurs familles :
 - les **méthodes hiérarchiques**, qui construisent une arborescence de groupes emboîtés, représentée par un dendrogramme que l'on découpe ensuite ;
 - les **méthodes fondées sur la densité** (DBSCAN), qui cherchent des zones de forte concentration et acceptent du bruit.
 
-AP n'entre dans aucune de ces cases : c'est une méthode de **propagation de messages** sur un graphe dont les nœuds sont les observations. Elle partage avec K-medoids l'idée de représentants réels, mais s'en distingue par le mécanisme (échanges itératifs de messages plutôt que recherche directe) et par le réglage du nombre de clusters (préférence continue plutôt que $k$ entier).
+AP n'entre dans aucune de ces cases : il s'agit d'une méthode de **propagation de messages** sur un graphe dont les nœuds sont les observations. Elle partage avec K-medoids l'idée de représentants réels, mais s'en distingue par le mécanisme (échanges itératifs de messages plutôt que recherche directe) et par le réglage du nombre de clusters (préférence continue plutôt que $k$ entier).
 
 # Fondements mathématiques
 
@@ -176,6 +176,27 @@ La lecture du tableau est immédiate : aucune valeur de la préférence n'est «
 
 **De R à Python.** Les deux implémentations se ressemblent fortement, ce qui rend la comparaison d'usage instructive. En R, `apcluster()` prend la matrice de similarités en entrée et règle la préférence par quantile (`q`), ce qui rend le balayage immédiat ; l'objet retourné expose directement clusters, exemplaires et nombre d'itérations. En Python, `AffinityPropagation` part des données et calcule lui-même la similarité ; la préférence est une valeur absolue (`preference`), qu'il faut donc convertir soi-même en quantile pour reproduire le réglage d'`apcluster`. À fonctionnalités équivalentes, l'interface d'`apcluster` est plus proche de la présentation théorique (matrice $S$, quantiles), tandis que scikit-learn s'intègre plus naturellement dans une chaîne de traitement Python (même API `fit`/`fit_predict` que les autres algorithmes). Sur ce TP, les deux outils produisent des partitions qualitativement identiques à réglages alignés.
 
+## Exemples concrets : avant / après
+
+Afin de rendre le fonctionnement d'AP plus concret, trois situations « avant / après » sont présentées. Elles ont été produites par les scripts du TP et permettent d'évaluer, sur un problème précis, ce que la méthode apporte effectivement.
+
+**Exemple 1 — De l'absence de représentant au représentant réel.**
+
+- *Avant (K-means, $k$ fixé à 3).* Chaque espèce est approchée par un centroïde, point moyen des quatre mesures. Ce centroïde ne correspond à aucune fleur du jeu : il ne peut être ni mesuré, ni montré, ni soumis à un expert botaniste.
+- *Après (AP, préférence minimale, 3 clusters).* Chaque groupe est représenté par une **fleur réelle** (son exemplaire), dont les quatre mesures sont lisibles dans le tableau initial. Il devient possible d'inspecter concrètement le « prototype » de chaque groupe, de le photographier ou de le confronter à la taxonomie. C'est ce passage d'un résumé fictif à un représentant inspectable qui motive le recours à AP dans les applications de sélection.
+
+**Exemple 2 — Effet de la préférence sur le nombre de groupes.**
+
+- *Avant (préférence médiane, $q = 0{,}5$).* Le réglage par défaut produit **9 clusters** et un ARI de 0,354 : la structure en trois espèces est fragmentée, et deux espèces sont éclatées en plusieurs sous-groupes.
+- *Après (préférence basse, $q = 0$).* Le même jeu de données est regroupé en **3 clusters**, avec un ARI de 0,631 : la partition retrouvée est beaucoup plus proche des espèces botaniques. Aucune autre modification n'a été apportée — seules les préférences diagonales ont été abaissées —, ce qui illustre que le nombre de groupes est gouverné par ce paramètre et non découvert de manière intrinsèque.
+
+**Exemple 3 — Effet de l'amortissement sur la convergence.**
+
+- *Avant ($\lambda = 0{,}5$).* L'algorithme converge en 109 itérations ; sur des données plus difficiles, un amortissement aussi faible peut toutefois laisser les messages osciller sans se stabiliser.
+- *Après ($\lambda = 0{,}9$).* La même partition (9 clusters) est obtenue, mais en 210 itérations : la convergence est plus lente et plus sûre. Lorsque des oscillations apparaissent, il est donc possible de les lever en augmentant $\lambda$ — au prix d'un calcul plus long —, ce qui constitue le réglage correctif de base de la méthode [@wang2007affinity].
+
+Ces trois exemples dégagent un enseignement commun : AP ne se résume pas à « trouver les groupes », mais offre des **leviers explicites** — la préférence pour le nombre de groupes, l'amortissement pour la convergence — dont l'effet peut être observé et documenté, ce qui renforce la crédibilité et la reproductibilité de l'analyse.
+
 ## Comparaison qualitative avec les méthodes de référence
 
 Face à **K-means**, AP s'affranchit du choix préalable de $k$ et choisit des représentants réels, mais il est plus coûteux et son nombre de groupes dépend de la préférence. Face aux **K-medoids**, qui sélectionnent eux aussi des observations réelles, AP évite de fixer $k$, au prix d'un réglage continu parfois délicat. Face à la **classification hiérarchique**, qui fournit toute une échelle de regroupements, AP délivre directement une partition sans découpage de dendrogramme. En contrepartie, sa mémoire en $O(n^2)$ et sa sensibilité à la préférence et à l'amortissement limitent son usage aux jeux de données de taille modeste et exigent une étude de sensibilité systématique.
@@ -187,6 +208,17 @@ Le mécanisme peut se comprendre sans mathématiques lourdes. Chaque observation
 # Ce que dit la bibliographie sur Affinity Propagation
 
 L'article fondateur de @frey2007clustering, publié dans *Science*, introduit AP et l'illustre sur des visages, des phrases et des villes ; il recommande la préférence médiane comme point de départ. Un commentaire critique de @brusco2008comment, dans la même revue, montre qu'une heuristique classique du problème $p$-médiane atteint souvent une erreur plus faible qu'AP en un temps comparable : l'avantage d'AP n'est donc pas acquis et doit être évalué sur chaque cas. @wang2007affinity constatent que la préférence médiane ne conduit pas, dans de nombreux cas, à une solution satisfaisante et proposent un balayage adaptatif ; @sinha2025affinity décrivent encore en 2025 le choix de la préférence comme l'un des principaux défis d'AP et mobilisent des méta-heuristiques pour le régler. Côté applications, @leone2007clustering appliquent une version à contraintes souples à des données d'expression génétique, @wang2024gsap sélectionnent des conditions expérimentales en combustion par une variante à sensibilité globale, et @periti2025incremental adaptent AP au suivi incrémental de corpus diachroniques. Côté implémentations, le package R `apcluster` [@bodenhofer2011apcluster] est la référence en R, et scikit-learn [@pedregosa2011scikit] fournit la classe `AffinityPropagation` utilisée dans notre TP ; le carnet de @tirthajyoti_ap en propose une introduction pédagogique en Python.
+
+## Variantes et prolongements récents
+
+Plusieurs travaux, issus des études que nous avons consultées, étendent la méthode d'origine et en repoussent certaines limites ; ils ouvrent des pistes qui pourraient être mobilisées pour parfaire le présent projet.
+
+- **Multi-exemplaires (MEAP).** @wang2013meap partent du constat qu'un exemplaire unique par cluster impose une structure « en étoile » mal adaptée aux groupes allongés ou de forme quelconque. Leur variante autorise **plusieurs exemplaires par cluster**, reliés à un « super-exemplaire », ce qui améliore la modélisation des clusters non convexes tout en conservant l'esprit de la propagation de messages.
+- **AP adaptatif.** @wang2007affinity traitent directement les deux difficultés pratiques que nous avons rencontrées : le choix de la préférence et les oscillations. Leur méthode balaie automatiquement la préférence pour explorer le nombre de clusters, ajuste l'amortissement pour lever les oscillations et, en dernier recours, diminue la préférence pour « s'échapper » d'une oscillation persistante. Notre balayage manuel de la préférence (section 5) peut être lu comme une version simplifiée de cette stratégie.
+- **AP incrémental (APP).** @periti2025incremental proposent une extension capable d'intégrer de nouvelles observations sans recalculer l'ensemble des clusters, par consolidation et stratification, afin de suivre des données évolutives (corpus diachroniques) tout en préservant les acquis et en oubliant l'obsolète.
+- **Applications récentes.** AP demeure mobilisé dans des domaines variés, par exemple pour la localisation intérieure par regroupement de points de référence radio [@jin2026localization] ou pour l'aide à la décision dans un poste de contrôle ferroviaire [@chtioui2025these], ce qui suggère que la méthode reste d'actualité et mérite d'être bien comprise.
+
+Ces prolongements confirment le positionnement adopté dans ce rapport : AP est une méthode vivante, dont les limites (choix de la préférence, forme des clusters, passage à l'échelle) sont documentées et font l'objet de corrections actives.
 
 # Discussion critique
 
