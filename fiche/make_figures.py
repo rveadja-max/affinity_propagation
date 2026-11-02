@@ -22,8 +22,15 @@ from sklearn.preprocessing import StandardScaler
 
 GRAINE = 2026
 OUT = Path(__file__).resolve().parent          # écriture dans fiche/
-COULEURS = ["#4C72B0", "#55A868", "#C44E52", "#8172B2", "#937860",
-            "#DA8BC3", "#8C8C8C", "#CCB974", "#64B5CD", "#D65F5F"]
+# Palette sobre et apaisée (tons froids atténués, type « Nord »), moins
+# saturée qu'une palette vive pour reposer l'oeil en impression.
+COULEURS = ["#5E81AC", "#A3BE8C", "#88C0D0", "#B48EAD", "#8FBCBB",
+            "#D08770", "#81A1C1", "#EBCB8B", "#4C6A92", "#7A8B99"]
+BLEU = "#5E81AC"        # points de départ
+VIOLET = "#B48EAD"      # messages
+ROUGE = "#BF616A"       # accent exemplaires (atténué)
+OR = "#EBCB8B"          # exemplaire final (atténué)
+BARRE = "#88C0D0"       # barres de l'histogramme
 
 
 def _donnees():
@@ -48,22 +55,22 @@ def fig_principe():
     fig, axes = plt.subplots(1, 3, figsize=(9, 3))
 
     # Étape 1 — données brutes, toutes candidates
-    axes[0].scatter(pts[:, 0], pts[:, 1], s=22, c=COULEURS[0], edgecolors="white",
+    axes[0].scatter(pts[:, 0], pts[:, 1], s=22, c=BLEU, edgecolors="white",
                     linewidths=0.4)
     axes[0].set_title("1. Données de départ", fontsize=11, fontweight="bold")
 
     # Étape 2 — messages responsabilité / disponibilité
     ax = axes[1]
-    ax.scatter(pts[:, 0], pts[:, 1], s=22, c=COULEURS[0], edgecolors="white",
+    ax.scatter(pts[:, 0], pts[:, 1], s=22, c=BLEU, edgecolors="white",
                linewidths=0.4, zorder=3)
     ex = pts[exe]
     for e in ex:
         proches = np.argsort(np.sum((pts - e) ** 2, axis=1))[1:5]
         for p in proches:
             ax.annotate("", xy=e, xytext=pts[p],
-                        arrowprops=dict(arrowstyle="->", color="#8E7CC3",
+                        arrowprops=dict(arrowstyle="->", color=VIOLET,
                                         lw=1.0, alpha=0.7))
-    ax.scatter(ex[:, 0], ex[:, 1], s=120, facecolors="none", edgecolors="#C44E52",
+    ax.scatter(ex[:, 0], ex[:, 1], s=120, facecolors="none", edgecolors=ROUGE,
                linewidths=1.8, zorder=4)
     ax.set_title("2. Échange de messages", fontsize=11, fontweight="bold")
 
@@ -72,8 +79,8 @@ def fig_principe():
     for c, k in enumerate(np.unique(lab)):
         ax.scatter(pts[lab == k, 0], pts[lab == k, 1], s=24, c=COULEURS[c % 10],
                    edgecolors="white", linewidths=0.4)
-    ax.scatter(ex[:, 0], ex[:, 1], marker="*", s=240, c="gold",
-               edgecolors="black", linewidths=0.8, zorder=5, label="exemplaire (réel)")
+    ax.scatter(ex[:, 0], ex[:, 1], marker="*", s=240, c=OR,
+               edgecolors="#3B4252", linewidths=0.8, zorder=5, label="exemplaire (réel)")
     ax.set_title("3. Exemplaires et clusters", fontsize=11, fontweight="bold")
     ax.legend(loc="best", fontsize=7, frameon=False)
 
@@ -106,7 +113,7 @@ def fig_preference():
         for c, cl in enumerate(np.unique(lab)):
             ax.scatter(X[lab == cl, 0], X[lab == cl, 1], s=14,
                        c=COULEURS[c % 10], edgecolors="none")
-        ax.scatter(X[exe, 0], X[exe, 1], marker="*", s=110, c="black")
+        ax.scatter(X[exe, 0], X[exe, 1], marker="*", s=110, c="#3B4252")
         ax.set_title(f"préférence {nom}\n$q$ = {q}  →  {k} clusters", fontsize=10)
     _habillage(fig, axes, "ap_preference.png")
 
@@ -122,7 +129,7 @@ def fig_amortissement():
         lams.append(str(lam)); iters.append(ap.n_iter_)
         ks.append(len(ap.cluster_centers_indices_))
     fig, ax = plt.subplots(figsize=(4.6, 2.9))
-    bars = ax.bar(lams, iters, color="#8E7CC3", width=0.55)
+    bars = ax.bar(lams, iters, color=BARRE, width=0.55)
     for b, k in zip(bars, ks):
         ax.text(b.get_x() + b.get_width() / 2, b.get_height() + 2,
                 f"{k} clusters", ha="center", fontsize=9)

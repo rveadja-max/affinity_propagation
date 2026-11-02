@@ -10,9 +10,9 @@ format:
       - text: |
           \usepackage{tcolorbox}
           \usepackage{xcolor}
-          \definecolor{apviolet}{HTML}{5B4E8C}
-          \definecolor{apclair}{HTML}{EDEAF6}
-          \definecolor{apaccent}{HTML}{8E7CC3}
+          \definecolor{apviolet}{HTML}{4C6A92}
+          \definecolor{apclair}{HTML}{ECEFF4}
+          \definecolor{apaccent}{HTML}{81A1C1}
           \usepackage{fancyhdr}
           \pagestyle{fancy}
           \fancyhf{}
