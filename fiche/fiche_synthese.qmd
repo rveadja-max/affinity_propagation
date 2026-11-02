@@ -1,14 +1,88 @@
 ---
-title: "Affinity Propagation — fiche de synthèse"
-author:
-  - "Hervé ADJAKOSSA"
-  - "Marie DE AMORIM PEREIRA DA SILVA"
+title: ""
 lang: fr
 format:
   pdf:
     papersize: a4
-    geometry: margin=1.5cm
-    fontsize: 10pt
+    geometry: margin=1.3cm
+    fontsize: 9pt
+    include-in-header:
+      - text: |
+          \usepackage{tcolorbox}
+          \usepackage{xcolor}
+          \definecolor{apviolet}{HTML}{4C6A92}
+          \definecolor{apclair}{HTML}{ECEFF4}
+          \definecolor{apaccent}{HTML}{81A1C1}
+          \usepackage{fancyhdr}
+          \pagestyle{fancy}
+          \fancyhf{}
+          \renewcommand{\headrulewidth}{0pt}
+          \fancyhead[R]{\small\color{apaccent}\textsc{Fiche de synthèse}}
+          \setlength{\parskip}{2pt}
+editor: visual
 ---
 
-<!-- Fiche d'une page A4 stricte, à rendre au plus tard le 03/11/2026. -->
+\begin{center}
+{\LARGE\bfseries\color{apviolet} Affinity Propagation (AP)}\\[1pt]
+{\small Hervé ADJAKOSSA \;·\; Marie DE AMORIM PEREIRA DA SILVA \;·\; Apprentissage non supervisé, 2026}
+\end{center}
+
+\vspace{-2pt}
+\begin{tcolorbox}[colback=apclair,colframe=apviolet,left=4pt,right=4pt,top=3pt,bottom=3pt,boxrule=0.6pt]
+\textbf{\color{apviolet}En une phrase :} AP regroupe des observations en choisissant, \emph{parmi elles}, des \textbf{exemplaires réels}, et fait \emph{émerger le nombre de groupes} d'un échange itératif de messages --- sans fixer $k$ à l'avance.
+\end{tcolorbox}
+
+\vspace{2pt}
+{\large\bfseries\color{apviolet} Comment fonctionne AP ?}
+
+L'idée tient en trois étapes : chaque observation est candidate à représenter les autres, elles échangent des messages pour se désigner des représentants, puis des exemplaires et leurs clusters émergent.
+
+\begin{center}
+\includegraphics[width=0.72\textwidth]{ap_principe.png}
+\end{center}
+
+\begin{tcolorbox}[colback=apclair,colframe=apviolet,title=\textbf{BASE THÉORIQUE},colbacktitle=apviolet,coltitle=white,left=4pt,right=4pt,top=2pt,bottom=2pt,boxrule=0.6pt]
+AP part d'une \textbf{matrice de similarités} $s(i,k)$ (souvent $-\lVert x_i-x_k\rVert^2$). Deux messages circulent : la \textbf{responsabilité} $r(i,k)$ ($x_k$ représente-t-il bien $x_i$ ?) et la \textbf{disponibilité} $a(i,k)$ ($x_i$ devrait-il choisir $x_k$ ?). $x_k$ devient exemplaire quand $r(k,k)+a(k,k)>0$. AP maximise une approximation de la somme des similarités aux exemplaires.
+\end{tcolorbox}
+
+\vspace{2pt}
+{\large\bfseries\color{apviolet} Les 2 paramètres qui changent le plus le résultat}
+
+Ils ne changent pas les données : la \textbf{préférence} pilote le \emph{nombre} de groupes, l'\textbf{amortissement} pilote la \emph{convergence}.
+
+\begin{center}
+\begin{minipage}[c]{0.52\textwidth}
+\centering
+\includegraphics[width=\textwidth]{ap_preference.png}
+\end{minipage}\hfill
+\begin{minipage}[c]{0.28\textwidth}
+\centering
+\includegraphics[width=\textwidth]{ap_amortissement.png}
+\end{minipage}
+\end{center}
+
+\vspace{1pt}
+{\large\bfseries\color{apviolet} Comment choisir les paramètres ?}
+
+Pour obtenir **peu de groupes**, on règle la préférence basse (proche du **minimum** des similarités) : chaque point accepte d'être représenté par une voisine. À l'inverse, une préférence haute (proche du maximum) pousse chaque observation à se représenter elle-même et multiplie les groupes. On part généralement de la **médiane**, puis on **balaie** la préférence. Un amortissement **λ élevé (0,9)** stabilise les messages au prix d'un calcul plus long.
+
+\noindent
+\begin{minipage}[t]{0.54\textwidth}
+{\bfseries\color{apviolet} Forces}
+\begin{itemize}\setlength{\itemsep}{0pt}
+\item Pas de $k$ à fixer ; exemplaires réels inspectables.
+\item Déterministe à paramètres fixés.
+\item Accepte des similarités non métriques.
+\end{itemize}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.44\textwidth}
+{\bfseries\color{apviolet} Limites}
+\begin{itemize}\setlength{\itemsep}{0pt}
+\item Mémoire et temps en $O(n^2)$ : jeux petits à moyens.
+\item Nombre de groupes sensible à la préférence.
+\item Oscillations possibles si $\lambda$ trop faible.
+\end{itemize}
+\end{minipage}
+
+\vspace{1pt}
+{\footnotesize\textbf{Références :} Frey \& Dueck (2007), \emph{Science} 315, 972–976, doi:10.1126/science.1136800 · Bodenhofer et al. (2011), \emph{Bioinformatics} 27(17), doi:10.1093/bioinformatics/btr406 · Brusco \& Köhn (2008), \emph{Science} 319, 726, doi:10.1126/science.1150921 · Wang et al. (2013), \emph{IEEE TPAMI} 35(9), doi:10.1109/TPAMI.2013.28. \emph{Figures : résultats réels d'AP (scikit-learn 1.9.1) sur Iris standardisé, régénérables par \texttt{fiche/make\_figures.py}.}}

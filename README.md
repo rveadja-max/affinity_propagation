@@ -40,7 +40,7 @@ clustering hiérarchique ?
 │   └── plan_rapport.md, recherche_bibliographique.md          notes de travail
 ├── tp/                   TP en R et en Python, données Iris uniquement
 │   ├── Application_Iris.R
-│   └── Application_Iris.py   (à venir)
+│   └── Application_Iris.py
 ├── fiche/                fiche de synthèse (Quarto → PDF)
 ├── slides/               support de présentation (Quarto → reveal.js)
 └── analyse_litterature/  questions de recherche et analyse du corpus
@@ -49,8 +49,8 @@ clustering hiérarchique ?
 ## Prérequis
 
 - **R ≥ 4.3** avec le paquet `apcluster` (testé avec R 4.6.1 et `apcluster` 1.4.14)
-- **Python 3** avec scikit-learn, pour la partie Python du TP (version de référence de la
-  documentation : scikit-learn 1.9.1 ; installation non encore testée)
+- **Python 3** avec scikit-learn, pour la partie Python du TP (testé avec Python 3.12.3 et
+  scikit-learn 1.9.1 le 02/11/2026)
 - **Quarto ≥ 1.4** (testé avec 1.10.18)
 - **Une distribution LaTeX avec XeLaTeX et Biber**, nécessaire au rapport : par exemple TinyTeX, installé avec `quarto install tinytex`
 
@@ -71,7 +71,7 @@ https://scikit-learn.org/stable/modules/generated/sklearn.cluster.AffinityPropag
 
 ```bash
 Rscript tp/Application_Iris.R      # version R
-python3 tp/Application_Iris.py     # version Python (à venir)
+python3 tp/Application_Iris.py     # version Python
 ```
 
 Le script R affiche ses graphiques dans `Rplots.pdf`, fichier non versionné.
@@ -83,6 +83,12 @@ quarto render Report/Affinity_propagation_rapport.qmd   # PDF avec page de titre
 quarto render fiche/fiche_synthese.qmd                   # PDF A4
 quarto render slides/slides.qmd                          # HTML autonome
 ```
+
+## Documentation
+
+Une documentation complète (objet, installation, exécution du TP pas à pas,
+exemples de sortie, reproductibilité) est fournie dans
+[`DOCUMENTATION.md`](DOCUMENTATION.md).
 
 ## Règles de travail
 

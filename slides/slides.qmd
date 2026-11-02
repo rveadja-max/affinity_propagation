@@ -13,3 +13,136 @@ format:
 ---
 
 <!-- Support des 20 min de théorie (10 min par personne), à déposer au plus tard le 04/11/2026 à 23h59. -->
+
+## Plan de l'exposé
+
+1. **Le problème** : regrouper sans savoir combien de groupes
+2. **L'idée d'AP** : des exemplaires réels, élus par messages
+3. **Les fondements** : similarités, préférence, responsabilités, disponibilités
+4. **En pratique** : R (`apcluster`) et Python (scikit-learn) sur Iris
+5. **Comparaison et limites**, puis TP guidé (40 min)
+
+## Le problème : les limites de K-means
+
+- Le clustering répartit des observations non étiquetées en groupes homogènes.
+- **K-means** impose de fixer le nombre de groupes $k$ à l'avance.
+- Chaque groupe est représenté par un **centroïde** : un point moyen qui **n'existe pas** dans les données.
+
+. . .
+
+> Et si l'on veut sélectionner des **cas réels et typiques** — un prototype, un patient, une condition expérimentale — sans connaître $k$ ?
+
+## L'idée d'Affinity Propagation
+
+- Proposé par **Frey & Dueck, *Science* 2007**.
+- Chaque groupe est représenté par un **exemplaire** (*exemplar*) : une **observation réelle** du jeu de données.
+- Le **nombre de groupes n'est pas fixé** : il émerge d'un marchandage itératif entre les observations.
+- Chaque point « vote » pour son représentant ; les candidats annoncent leur disponibilité à représenter.
+
+## Les ingrédients
+
+- **Matrice de similarités** $s(i,k)$ : à quel point $x_k$ ressemble à $x_i$. Choix courant : $s(i,k) = -\lVert x_i - x_k\rVert^2$.
+- **Préférence** $s(k,k)$ : propension *a priori* de $x_k$ à devenir exemplaire. **C'est elle qui gouverne le nombre de clusters.**
+- Deux messages échangés itérativement :
+  - la **responsabilité** $r(i,k)$ : $x_k$ est-il un bon représentant pour $x_i$ ?
+  - la **disponibilité** $a(i,k)$ : $x_i$ devrait-il choisir $x_k$, vu le soutien dont $x_k$ dispose ?
+
+## Les mises à jour
+
+$$
+r(i,k) \leftarrow s(i,k) - \max_{k'\neq k}\bigl\{a(i,k') + s(i,k')\bigr\}
+$$
+
+$$
+a(i,k) \leftarrow \min\Bigl\{0,\ r(k,k) + \!\!\sum_{i'\notin\{i,k\}}\!\! \max\bigl(0, r(i',k)\bigr)\Bigr\}
+$$
+
+- $x_k$ devient **exemplaire** quand $r(k,k) + a(k,k) > 0$.
+- Chaque point rejoint l'exemplaire qui maximise $a(i,k) + r(i,k)$.
+- Instance de l'algorithme **max-sum** sur graphe de facteurs.
+
+## Amortissement et convergence
+
+- Les mises à jour peuvent **osciller** ; on **amortit les messages** :
+
+$$\text{message} \leftarrow \lambda \cdot \text{ancienne valeur} + (1-\lambda) \cdot \text{nouvelle valeur}$$
+
+- $\lambda \in [0{,}5 ; 0{,}9]$ : plus haut = plus stable, plus lent.
+- Arrêt : exemplaires inchangés pendant `convits` itérations, ou `maxits` atteint.
+- Sur Iris : même partition pour $\lambda \in \{0{,}5 ; 0{,}7 ; 0{,}9\}$, mais 109 → 210 itérations.
+
+## Le rôle de la préférence (démonstration sur Iris)
+
+Préférence = quantile $q$ des similarités, balayé de 0 à 1 :
+
+| $q$ | 0 | 0,5 (médiane) | 0,6 | 1 |
+|---|---|---|---|---|
+| Clusters | **3** | 9 | 12 | 149 |
+| ARI vs espèces | **0,631** | 0,354 | 0,287 | 0,000 |
+
+. . .
+
+- Préférence basse → peu d'exemplaires ; préférence haute → chacun se représente.
+- La médiane, réglage **par défaut**, fragmente ici les 3 espèces en 9 groupes.
+- Le nombre de clusters n'est jamais « optimal » : il dépend des similarités **et** du réglage.
+
+## Mise en œuvre en R — `apcluster`
+
+```r
+library(apcluster)
+X  <- scale(iris[, 1:4])          # standardisation z-score
+S  <- negDistMat(X, r = 2)        # s(i,k) = -||xi - xk||^2
+res <- apcluster(S, q = 0.5, lam = 0.9,
+                 maxits = 1000, convits = 100, seed = 2026)
+length(res@clusters)              # nombre de groupes trouvés
+res@exemplars                     # indices d'observations réelles
+plot(res, X)                      # visualisation
+```
+
+## Mise en œuvre en Python — scikit-learn
+
+```python
+from sklearn.cluster import AffinityPropagation
+from sklearn.preprocessing import StandardScaler
+
+X_std = StandardScaler().fit_transform(iris.data)
+ap = AffinityPropagation(damping=0.9, random_state=2026)
+labels = ap.fit_predict(X_std)
+ap.cluster_centers_indices_       # exemplaires : observations réelles
+```
+
+Même similarité, même prétraitement : comparaison R / Python équitable.
+
+## AP face à K-means, K-medoids, hiérarchique
+
+| Méthode | Représentant | Nb de groupes |
+|---|---|---|
+| K-means | centroïde (fictif) | $k$ imposé |
+| K-medoids | médoïde (réel) | $k$ imposé |
+| Hiérarchique | — | par découpe |
+| **AP** | **exemplaire (réel)** | **émerge (préférence)** |
+
+À $k$ imposé par AP sur Iris : ARI 0,354 (AP) vs 0,322 (K-means). Chaque méthode optimise un critère différent.
+
+## Limites à retenir
+
+- Mémoire et temps en $O(n^2)$ : jeux **petits à moyens**.
+- La **préférence** est un réglage délicat (encore un défi en 2025) : balayage indispensable.
+- Une heuristique du $p$-médiane peut battre AP (Brusco & Köhn, 2008).
+- Iris valide le pipeline, il ne prouve rien sur la performance générale.
+
+## À vous de jouer — TP guidé (40 min)
+
+Depuis la racine du dépôt :
+
+```bash
+Rscript tp/Application_Iris.R      # version R
+python3 tp/Application_Iris.py     # version Python
+```
+
+1. Explorer Iris, standardiser ;
+2. Balayer la préférence, observer le nombre de clusters ;
+3. Comparer à K-means / K-medoids / hiérarchique ;
+4. Faire varier l'amortissement $\lambda$.
+
+**Références** : Frey & Dueck (2007), *Science* 315, 972–976 · Bodenhofer et al. (2011), *Bioinformatics* 27(17) · Brusco & Köhn (2008), *Science* 319, 726.
