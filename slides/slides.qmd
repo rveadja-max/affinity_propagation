@@ -1,0 +1,15 @@
+---
+title: "L'algorithme Affinity Propagation"
+subtitle: "Apprentissage non supervisé"
+author:
+  - "Hervé ADJAKOSSA"
+  - "Marie DE AMORIM PEREIRA DA SILVA"
+date: "5 novembre 2026"
+lang: fr
+format:
+  revealjs:
+    slide-number: true
+    embed-resources: true
+---
+
+<!-- Support des 20 min de théorie (10 min par personne), à déposer au plus tard le 04/11/2026 à 23h59. -->
