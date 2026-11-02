@@ -1,0 +1,14 @@
+---
+title: "Affinity Propagation — fiche de synthèse"
+author:
+  - "Hervé ADJAKOSSA"
+  - "Marie DE AMORIM PEREIRA DA SILVA"
+lang: fr
+format:
+  pdf:
+    papersize: a4
+    geometry: margin=1.5cm
+    fontsize: 10pt
+---
+
+<!-- Fiche d'une page A4 stricte, à rendre au plus tard le 03/11/2026. -->
