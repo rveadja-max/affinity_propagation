@@ -3,58 +3,224 @@ title: "L'algorithme Affinity Propagation"
 subtitle: "Apprentissage non supervisé"
 author: "Hervé ADJAKOSSA & Marie DE AMORIM PEREIRA DA SILVA"
 date: "5 Novembre 2026"
-format: 
+lang: fr
+documentclass: memoirerecherche
+pdf-engine: xelatex
+cite-method: biblatex
+template: template.tex
+bibliography: bibliography.bib
+biblio-style: authoryear
+evaluation: "Projet d'apprentissage non supervisé"
+diplome: "À compléter"
+anac: "2026–2027"
+module: "Apprentissage non supervisé"
+enseig: "Frédéric BLANCHARD, Philippe REGNAULT"
+coefficient: "À compléter"
+git: "https://gitlab-mi.univ-reims.fr/dea0014/affinity_propagation"
+abstract: "Affinity Propagation (AP) est un algorithme de classification non supervisée qui regroupe des observations en choisissant, parmi elles, des exemplaires réels, sans fixer le nombre de groupes à l'avance. Ce rapport présente ses fondements mathématiques (échanges de messages de responsabilité et de disponibilité sur une matrice de similarités), ses paramètres de réglage (préférence et amortissement), et une application reproductible au jeu de données Iris en R (apcluster) et en Python (scikit-learn). Une comparaison à K-means, K-medoids et à la classification hiérarchique, menée à nombre de groupes fixé, illustre les forces et les limites de la méthode."
+keywords: [clustering, Affinity Propagation, exemplaires, apcluster, scikit-learn, Iris]
+format:
   pdf:
     toc: true
     toc-title: "Table des matières"
     number-sections: true
+    highlight-style: none
+    header-includes:
+      - \usepackage{setspace}
+      - \onehalfspacing
 editor: visual
 ---
 
 \newpage
 
-# INTRODUCTION
+# Introduction
 
-Dans le cadre de la matière apprentissage non supervisé, enseignée par Monsieur Frédéric BLANCHARD et Monsieur Philippe REGNAULT, nous étudions l'algorithme "Affinity Propagation".
+Dans le cadre du module d'apprentissage non supervisé, enseigné par Frédéric Blanchard et Philippe Regnault, nous étudions l'algorithme **Affinity Propagation** (propagation d'affinité, AP dans la suite), proposé par @frey2007clustering.
 
-Pour commencer, il semble important d'établir une première distinction entre l'apprentissage supervisé et non supervisé. L'apprentissage non-supervisé, aussi appelé apprentissage automatique, consiste à utiliser des algorithmes pour apprendre des structures, des relations ou des règles à partir de données. Au lieu de programmer manuellement toutes les règles que l'ordinateur doit suivre, on lui fournit des données et une méthode qui lui permet d'en extraire certaines informations. L'apprentissage supervisé en revenche, consiste à utiliser des algorithmes pour apprendre des relations entre des données et des résultats connus, afin de prédire ces résultats pour de nouvelles observations. La différence majeure réside donc dans la connaissance (ou non) du résultat à prédire sur les données d'entraînement. Ce projet s'inscrit donc dans une démarche d'apprentissage non-supervisé.
+L'apprentissage automatique consiste à utiliser des algorithmes pour apprendre des structures, des relations ou des règles à partir de données, plutôt que de programmer manuellement toutes les règles. On distingue classiquement l'apprentissage **supervisé**, qui apprend une relation entre des données et des résultats connus afin de prédire ces résultats sur de nouvelles observations, de l'apprentissage **non supervisé**, qui travaille sur des données sans étiquettes et cherche à en révéler l'organisation. Ce projet relève de la seconde famille, et plus précisément du *clustering* : répartir des observations en groupes homogènes, appelés clusters, sans connaître ces groupes à l'avance.
 
-Le terme d'algorithme a été mentionné à plusieurs reprises, il nous semble donc important de commencer par le définir. Un algorithme est un processus systématique de résolution d'un problème. Un algorithme d'apprentissage automatique est plus élaboré : il utilise les données pour construire une solution à un problème donné. Il existe de nombreuses méthodes, car tous les problèmes ne se ressemblent pas. Certaines méthodes cherchent à prédire une valeur, d'autres à classer des observations, d'autres encore à découvrir des groupes ou des relations cachées dans les données.
+Un algorithme est un processus systématique de résolution d'un problème ; un algorithme d'apprentissage automatique utilise les données pour construire la solution. Il existe de nombreuses méthodes de clustering parce que les problèmes ne se ressemblent pas : partitionnement (K-means), hiérarchie (regroupement ascendant), densité (DBSCAN), et propagation de messages, qui est la voie d'AP.
 
-Nous nous intéresserons donc, dans ce rapport, à l'algorithme "Affinity Propagation". Notre travail permettra donc notamment de comprendre le but de cet algorithme, le comparer à d'autres algorithmes ayant un but similaire afin d'identifier les situations les plus propices à son utilisation, puis de comprendre les fondements mathématiques sous-jacents. Finalement, nous préciserons une implémentation existante sour R avant de mettre en place une application permettant de se familiariser avec Affinity Propagation.
+Dans ce rapport, nous expliquons le fonctionnement d'AP, ses fondements mathématiques, ses paramètres et ses limites, puis nous l'appliquons au jeu de données Iris en R (package `apcluster`) et en Python (`scikit-learn`), avec une comparaison à K-means, K-medoids et à la classification hiérarchique. Le code complet et reproductible est fourni dans le dépôt Git (`tp/`).
+
+# Pourquoi faire appel à Affinity Propagation ?
+
+## Le problème pratique
+
+Dans de nombreuses situations réelles, on souhaite regrouper des objets — profils de patients, séquences génétiques, conditions expérimentales, documents — **sans savoir combien de groupes** il convient de former, et en souhaitant que chaque groupe soit représenté par un **objet réel** plutôt que par une moyenne abstraite.
+
+K-means, la méthode de référence, impose deux choix gênants : fixer le nombre de groupes $k$ avant l'analyse, et représenter chaque groupe par son centroïde, un point moyen qui n'existe pas dans les données. Quand le but est de sélectionner des cas typiques à examiner de près — un prototype à fabriquer, un document à lire, une condition expérimentale à reproduire —, un représentant fictif ne convient pas.
+
+## Ce qu'AP apporte
+
+AP répond à ces deux limites : il choisit comme représentants des **exemplaires** (*exemplars*) pris **parmi les observations elles-mêmes**, et il **ne demande pas de fixer le nombre de clusters à l'avance** [@frey2007clustering]. Ce nombre émerge de l'algorithme, piloté par un paramètre de **préférence** qui exprime, pour chaque observation, sa propension à devenir exemplaire.
+
+Cas d'usage documentés dans la littérature : regroupement de gènes par profil d'expression [@leone2007clustering], sélection de conditions expérimentales représentatives en combustion [@wang2024gsap], amélioration du réglage d'AP par méta-heuristiques [@sinha2025affinity] et suivi incrémental de clusters dans des corpus diachroniques [@periti2025incremental]. Un carnet de démonstration en Python, qui reprend l'exemple officiel de scikit-learn, a également guidé notre mise en œuvre [@tirthajyoti_ap].
+
+## Positionnement dans la zoologie des méthodes
+
+Le clustering regroupe plusieurs familles :
+
+- les **méthodes de partitionnement** (K-means, K-medoids), qui répartissent directement les observations en un nombre de groupes fixé à l'avance ;
+- les **méthodes hiérarchiques**, qui construisent une arborescence de groupes emboîtés, représentée par un dendrogramme que l'on découpe ensuite ;
+- les **méthodes fondées sur la densité** (DBSCAN), qui cherchent des zones de forte concentration et acceptent du bruit.
+
+AP n'entre dans aucune de ces cases : c'est une méthode de **propagation de messages** sur un graphe dont les nœuds sont les observations. Elle partage avec K-medoids l'idée de représentants réels, mais s'en distingue par le mécanisme (échanges itératifs de messages plutôt que recherche directe) et par le réglage du nombre de clusters (préférence continue plutôt que $k$ entier).
+
+# Fondements mathématiques
+
+## Données : la matrice de similarités
+
+Soient $x_1, \dots, x_n$ les observations. AP ne travaille pas sur les observations elles-mêmes mais sur une **matrice de similarités** $S$ de terme général $s(i, k)$, où $s(i, k) > s(i, k')$ signifie que $x_k$ ressemble davantage à $x_i$ que $x_{k'}$. La similarité n'a pas besoin d'être symétrique ni de vérifier l'inégalité triangulaire : ce n'est pas nécessairement une distance.
+
+Lorsque l'objectif est de minimiser l'erreur quadratique, @frey2007clustering utilisent le négatif de la distance euclidienne au carré :
+
+$$
+s(i, k) = -\lVert x_i - x_k \rVert^2, \qquad i \neq k.
+$$
+
+C'est le choix que nous adoptons, disponible dans `apcluster` sous le nom `negDistMat(r = 2)` et équivalent à l'option `affinity="euclidean"` de scikit-learn.
+
+## La préférence s(k, k)
+
+Les valeurs **diagonales** $s(k, k)$ jouent un rôle à part : ce sont les **préférences**, qui quantifient *a priori* la propension de chaque observation à être choisie comme exemplaire. Le cas d'usage le plus courant attribue la même valeur $p$ à tous les points ; ce paramètre unique **contrôle le nombre de clusters** : une préférence proche du minimum des similarités conduit à peu de groupes, une préférence proche du maximum en produit beaucoup. @frey2007clustering recommandent la **médiane** des similarités comme point de départ, réglage par défaut du package `apcluster` [@bodenhofer2011apcluster]. C'est ce paramètre, et non un nombre de groupes $k$, qui remplace le réglage habituel du clustering.
+
+## Fonction objectif
+
+AP recherche une affectation $c : \{1,\dots,n\} \to \{1,\dots,n\}$, où $c(i)$ est l'exemplaire de l'observation $i$, qui maximise la similarité totale
+
+$$
+\mathcal{S}(c) = \sum_{i=1}^{n} s\bigl(i, c(i)\bigr)
+$$
+
+sous des **contraintes de cohérence** : chaque observation est affectée à exactement un exemplaire, et toute observation choisie comme exemplaire par au moins une autre doit être son propre exemplaire ($\exists i : c(i) = k \Rightarrow c(k) = k$). Trouver le maximum exact de ce critère est un problème d'optimisation combinatoire difficile — le problème de la $k$-médiane en est un cas particulier ; AP en cherche une bonne solution approchée par passage de messages [@frey2007clustering].
+
+## Les messages : responsabilités et disponibilités
+
+L'algorithme fait s'échanger entre les paires d'observations deux types de messages, qui peuvent être lus comme des tableaux de log-vraisemblances :
+
+- la **responsabilité** $r(i, k)$, envoyée de l'observation $i$ au candidat exemplaire $k$, mesure à quel point $x_k$ est un exemplaire approprié pour $x_i$, **compte tenu des autres candidats** ;
+- la **disponibilité** $a(i, k)$, envoyée du candidat $k$ à l'observation $i$, mesure à quel point il serait approprié que $x_i$ choisisse $x_k$, **compte tenu du soutien que $x_k$ reçoit des autres observations**.
+
+Les deux matrices sont initialisées à zéro, puis mises à jour par alternance :
+
+$$
+r(i, k) \;\leftarrow\; s(i, k) - \max_{k' \neq k} \bigl\{ a(i, k') + s(i, k') \bigr\},
+$$
+
+$$
+a(i, k) \;\leftarrow\; \min \Bigl\{ 0,\; r(k, k) + \!\! \sum_{i' \notin \{i, k\}} \!\! \max\bigl(0, r(i', k)\bigr) \Bigr\}
+\quad (i \neq k),
+\qquad
+a(k, k) \;\leftarrow\; \sum_{i' \neq k} \max\bigl(0, r(i', k)\bigr).
+$$
+
+À tout moment, l'observation $k$ est un exemplaire si son **autosupport** est positif : $r(k, k) + a(k, k) > 0$. Chaque observation est ensuite affectée à l'exemplaire $k$ qui maximise $a(i, k) + r(i, k)$. Ces règles s'interprètent comme une instance de l'algorithme **max-sum** sur un graphe de facteurs, qui minimise une approximation de l'énergie libre [@frey2007clustering].
+
+## Amortissement et convergence
+
+Sur certains jeux de données, les mises à jour peuvent **osciller** sans jamais se stabiliser (par exemple quand des similarités sont symétriques et les préférences égales, ce qui crée plusieurs points fixes). Pour l'éviter, chaque message est **amorti** : sa nouvelle valeur vaut $\lambda$ fois sa valeur précédente plus $(1 - \lambda)$ fois sa valeur calculée, avec $\lambda \in [0, 1)$, typiquement $\lambda = 0{,}5$ à $0{,}9$ [@frey2007clustering]. Ce sont bien les **messages** qui sont amortis, et non les préférences. Un $\lambda$ plus élevé améliore la stabilité au prix d'un plus grand nombre d'itérations. L'algorithme s'arrête lorsque les exemplaires restent inchangés pendant un nombre d'itérations fixé (`convits`), ou au bout d'un nombre maximal d'itérations (`maxits`).
+
+## Complexité et limites
+
+Avec une matrice de similarités dense, la mémoire requise est en $O(n^2)$ et chaque itération coûte $O(n^2)$ ; le coût total est donc de l'ordre de $O(n^2 T)$, où $T$ est le nombre d'itérations jusqu'à convergence. AP convient donc surtout aux jeux de données **petits à moyens** ; pour les grands jeux, il faut passer par des similarités creuses. Le choix de la préférence reste l'une des principales difficultés pratiques de la méthode [@sinha2025affinity], et une heuristique classique du problème $p$-médiane peut obtenir une erreur plus faible qu'AP à temps de calcul comparable [@brusco2008comment] : la supériorité d'AP n'est donc pas automatique et doit être vérifiée empiriquement, cas par cas.
+
+# Contexte d'utilisation : données, techniques, résultats attendus
+
+## Quelles données ?
+
+AP s'applique dès lors que l'on sait définir une similarité entre paires d'observations : vecteurs numériques (mesures physiques, profils d'expression génétique), mais aussi données non vectorielles dès qu'une similarité existe (séquences, images). Les prétraitements usuels s'imposent : standardisation des variables pour qu'aucune ne domine la distance, choix réfléchi de la similarité.
+
+## Quelles techniques ?
+
+En R, le package **apcluster** [@bodenhofer2011apcluster] fournit `apcluster()` (matrice de similarités ou fonction de similarité, préférence par quantile `q`, amortissement `lam`, `maxits`, `convits`), ainsi que `apclusterK()` lorsqu'un nombre de groupes précis est visé. En Python, la classe **`sklearn.cluster.AffinityPropagation`** de scikit-learn [@pedregosa2011scikit] offre les paramètres correspondants (`preference`, `damping`, `max_iter`, `convergence_iter`). Les deux implémentations partagent la même définition de la similarité euclidienne négative au carré.
+
+## Quels résultats attendre ?
+
+Le résultat d'AP est une liste d'**exemplaires** — des observations réelles — et l'affectation de chaque observation à l'un d'eux. Le nombre de groupes obtenu **ne doit jamais être présenté comme « optimal »** : il dépend de la préférence et de la matrice de similarités choisies. Une étude de sensibilité (balayage de la préférence) et une comparaison à des méthodes de référence sont donc indispensables avant toute interprétation.
+
+# Application au jeu de données Iris
+
+## Protocole
+
+Nous illustrons AP sur le jeu **Iris** (150 fleurs, 4 mesures : longueur et largeur des sépales et des pétales, 3 espèces de 50 individus), disponible dans R (`datasets::iris`) et dans scikit-learn. Ce jeu, facile, sert à **valider la chaîne de traitement** ; il ne démontre rien sur la performance générale d'AP. Protocole, identique en R et en Python :
+
+1. standardisation des 4 variables (z-score) ;
+2. similarité : moins la distance euclidienne au carré, $s(i,k) = -\lVert x_i - x_k \rVert^2$ ;
+3. AP avec amortissement $\lambda = 0{,}9$ et préférence réglée par **quantile** $q$ des similarités (comme l'argument `q` d'`apcluster`) ;
+4. **balayage** de $q$ de 0 à 1 par pas de 0,05 pour mesurer la sensibilité ;
+5. comparaison à K-means, K-medoids (`pam`) et au regroupement hiérarchique de Ward, à **nombre de groupes imposé par AP**, sur les mêmes données standardisées.
+
+Les étiquettes d'espèces servent **uniquement à évaluer** les partitions (indice de Rand ajusté, ARI), jamais à les construire. Les scripts complets, `tp/Application_Iris.R` et `tp/Application_Iris.py`, s'exécutent depuis la racine du dépôt ; toutes les graines aléatoires sont fixées.
+
+## Résultats reproduits localement
+
+Les chiffres ci-dessous sont des **résultats produits par nos scripts** (Python 3.12.3, scikit-learn 1.9.1 ; le script R est son pendant direct) — ce ne sont pas des résultats de la littérature.
+
+**Sensibilité à la préférence.** Sur Iris standardisé, le nombre de clusters croît continûment avec le quantile de la préférence : 3 groupes au minimum des similarités ($q = 0$), 9 groupes à la médiane ($q = 0{,}5$), 12 groupes à $q = 0{,}6$, jusqu'à 149 groupes à $q = 1$. L'accord avec les espèces botaniques (ARI) est le plus élevé au minimum des similarités (ARI = 0,631 pour 3 groupes) et décroît régulièrement quand la préférence augmente (ARI ≈ 0,35 à la médiane, proche de 0 au-delà de $q = 0{,}9$). Le tableau ci-dessous, extrait de la sortie de `tp/Application_Iris.py`, résume ce balayage.
+
+| quantile $q$ | 0 | 0,05 | 0,30 | 0,50 | 0,60 | 0,70 | 0,80 | 0,90 | 1 |
+|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| nb de clusters | 3 | 5 | 6 | 9 | 12 | 16 | 19 | 33 | 149 |
+| ARI vs espèces | 0,631 | 0,443 | 0,392 | 0,354 | 0,287 | 0,269 | 0,238 | 0,121 | 0,000 |
+
+: Balayage de la préférence sur Iris standardisé (scikit-learn 1.9.1, graine 2026). Le nombre de clusters croît avec $q$ ; l'accord avec les espèces décroît. {#tbl-balayage}
+
+La lecture du tableau est immédiate : aucune valeur de la préférence n'est « meilleure » en soi, mais seule une préférence proche du minimum retrouve ici les trois espèces. La courbe complète (21 valeurs de $q$) est produite par les deux scripts du TP.
+
+**Réglage par défaut.** La préférence médiane, choix par défaut d'`apcluster` comme de scikit-learn, produit ici **9 clusters** — trois fois plus que les 3 espèces réelles — avec un ARI de 0,354. Le réglage par défaut ne « retrouve » donc pas la structure botanique : il la **fragmente**. Cette observation rejoint les mises en garde de la littérature : la médiane est un point de départ, pas une garantie [@sinha2025affinity].
+
+**Comparaison à nombre de groupes égal ($k = 9$).** À nombre de groupes imposé par AP, K-means atteint un ARI de 0,322 contre 0,354 pour AP, avec une somme des distances au carré aux représentants légèrement plus faible (54,6 contre 60,1) : chaque méthode optimise un critère différent. La version R du TP ajoute `pam` (K-medoids) et le regroupement de Ward dans la même configuration.
+
+**Amortissement.** À préférence médiane fixée, l'amortissement ne change pas la partition obtenue (9 clusters pour $\lambda \in \{0{,}5 ; 0{,}7 ; 0{,}9\}$) mais allonge la convergence : 109 itérations à $\lambda = 0{,}5$, 113 à $0{,}7$, 210 à $0{,}9$. L'amortissement joue donc ici son rôle attendu : stabiliser les messages, sans modifier le résultat final sur ce jeu simple.
+
+**De R à Python.** Les deux implémentations se ressemblent fortement, ce qui rend la comparaison d'usage instructive. En R, `apcluster()` prend la matrice de similarités en entrée et règle la préférence par quantile (`q`), ce qui rend le balayage immédiat ; l'objet retourné expose directement clusters, exemplaires et nombre d'itérations. En Python, `AffinityPropagation` part des données et calcule lui-même la similarité ; la préférence est une valeur absolue (`preference`), qu'il faut donc convertir soi-même en quantile pour reproduire le réglage d'`apcluster`. À fonctionnalités équivalentes, l'interface d'`apcluster` est plus proche de la présentation théorique (matrice $S$, quantiles), tandis que scikit-learn s'intègre plus naturellement dans une chaîne de traitement Python (même API `fit`/`fit_predict` que les autres algorithmes). Sur ce TP, les deux outils produisent des partitions qualitativement identiques à réglages alignés.
+
+## Comparaison qualitative avec les méthodes de référence
+
+Face à **K-means**, AP s'affranchit du choix préalable de $k$ et choisit des représentants réels, mais il est plus coûteux et son nombre de groupes dépend de la préférence. Face aux **K-medoids**, qui sélectionnent eux aussi des observations réelles, AP évite de fixer $k$, au prix d'un réglage continu parfois délicat. Face à la **classification hiérarchique**, qui fournit toute une échelle de regroupements, AP délivre directement une partition sans découpage de dendrogramme. En contrepartie, sa mémoire en $O(n^2)$ et sa sensibilité à la préférence et à l'amortissement limitent son usage aux jeux de données de taille modeste et exigent une étude de sensibilité systématique.
+
+## Pourquoi le nombre de groupes varie-t-il ?
+
+Le mécanisme peut se comprendre sans mathématiques lourdes. Chaque observation se demande : « suis-je assez singulière pour me représenter moi-même, ou une voisine me représente-t-elle mieux ? ». La **préférence** est le seuil d'exigence de cette question : réglée bas, une observation accepte d'être représentée par une voisine même lointaine, et peu d'exemplaires suffisent ; réglée haut, presque chaque observation s'estime irremplaçable, et les exemplaires se multiplient. Les **similarités** fixent, elles, le paysage dans lequel ce marchandage a lieu : si les données forment des groupes denses et bien séparés, un large éventail de préférences donne le même découpage ; si la structure est diffuse, le nombre de groupes glisse continûment avec la préférence — c'est ce que montre notre balayage sur Iris, où seule la préférence minimale approche les trois espèces. Le nombre de clusters d'AP n'est donc pas une propriété « découverte » des données, mais le résultat conjoint de la structure des similarités et d'un paramètre que l'analyste doit assumer et documenter.
+
+# Ce que dit la bibliographie sur Affinity Propagation
+
+L'article fondateur de @frey2007clustering, publié dans *Science*, introduit AP et l'illustre sur des visages, des phrases et des villes ; il recommande la préférence médiane comme point de départ. Un commentaire critique de @brusco2008comment, dans la même revue, montre qu'une heuristique classique du problème $p$-médiane atteint souvent une erreur plus faible qu'AP en un temps comparable : l'avantage d'AP n'est donc pas acquis et doit être évalué sur chaque cas. @wang2007affinity constatent que la préférence médiane ne conduit pas, dans de nombreux cas, à une solution satisfaisante et proposent un balayage adaptatif ; @sinha2025affinity décrivent encore en 2025 le choix de la préférence comme l'un des principaux défis d'AP et mobilisent des méta-heuristiques pour le régler. Côté applications, @leone2007clustering appliquent une version à contraintes souples à des données d'expression génétique, @wang2024gsap sélectionnent des conditions expérimentales en combustion par une variante à sensibilité globale, et @periti2025incremental adaptent AP au suivi incrémental de corpus diachroniques. Côté implémentations, le package R `apcluster` [@bodenhofer2011apcluster] est la référence en R, et scikit-learn [@pedregosa2011scikit] fournit la classe `AffinityPropagation` utilisée dans notre TP ; le carnet de @tirthajyoti_ap en propose une introduction pédagogique en Python.
+
+# Discussion critique
+
+Plusieurs limites doivent encadrer la portée de ces résultats. D'abord, Iris est un jeu **petit et facile** : nos chiffres valident le pipeline et illustrent le comportement d'AP, mais n'autorisent aucune conclusion sur la performance générale de la méthode. Ensuite, l'ARI mesure l'accord avec des classes botaniques connues, non une « vérité » du clustering : un ARI modéré à la préférence médiane ne signifie pas qu'AP échoue, mais qu'il découpe autrement que la taxonomie — ce qui est précisément le phénomène de fragmentation que nous documentons. Enfin, notre comparaison à $k$ imposé par AP est équitable pour mesurer la qualité de partition, mais elle ne tranche pas la question du **choix** de $k$, que K-means et K-medoids délèguent à l'analyste et qu'AP délègue à la préférence. La critique de @brusco2008comment — une heuristique du $p$-médiane peut atteindre une erreur plus faible qu'AP — rappelle que l'intérêt d'AP tient moins à une supériorité numérique qu'à son cadre : pas de $k$ à fixer, des représentants réels, une similarité libre. Nos prolongements prioritaires seraient l'application au jeu Wine (13 variables, où la standardisation compte davantage) et une étude de stabilité par sous-échantillonnage, propositions que nous marquons comme hypothèses du projet plutôt que comme résultats.
+
+# Conclusion
+
+Affinity Propagation occupe une place singulière dans la panoplie du clustering : plutôt que de fixer un nombre de groupes, il fait émerger des **exemplaires réels** d'un marchandage itératif entre observations, réglé par la préférence et amorti pour converger. Notre application à Iris illustre à la fois sa simplicité d'usage — quelques lignes en R comme en Python — et sa principale exigence : le nombre de groupes obtenu dépend fortement de la préférence, et le réglage par défaut peut fragmenter une structure connue. AP est donc un outil précieux lorsque l'on cherche des représentants concrets sans hypothèse sur $k$, à condition d'en balayer les réglages, de le confronter à K-means, K-medoids ou à la classification hiérarchique, et de rapporter paramètres, graines et versions. Les prolongements possibles incluent l'application au jeu Wine, l'étude de stabilité par sous-échantillonnage et les variantes récentes de la littérature.
+
+# Annexe : extraits de code
+
+Le TP complet est fourni dans `tp/`. On en extrait ici le cœur minimal, identique dans son principe en R et en Python.
+
+**Version R** (`tp/Application_Iris.R`) :
+
+```r
+library(apcluster)
+X <- scale(as.matrix(iris[, 1:4]))     # z-score
+S <- negDistMat(X, r = 2)              # s(i,k) = -||xi - xk||^2
+res <- apcluster(S, q = 0.5, lam = 0.9, seed = 2026)
+length(res@clusters)                   # nombre de groupes trouvés
+res@exemplars                          # observations choisies comme exemplaires
+```
+
+**Version Python** (`tp/Application_Iris.py`) :
+
+```python
+from sklearn.cluster import AffinityPropagation
+from sklearn.preprocessing import StandardScaler
+
+X_std = StandardScaler().fit_transform(iris.data)
+ap = AffinityPropagation(damping=0.9, random_state=2026)
+labels = ap.fit_predict(X_std)
+exemplaires = ap.cluster_centers_indices_   # observations réelles
+```
 
 \newpage
-
-# I. POSITIONNEMENT DE L'ALGORITHME AFFINITY PROPAGATION DANS L'APPRENTISSAGE AUTOMATIQUE
-
-## A. La classification non supervisée : le clustering
-
-L'apprentissage non supervisé regroupe plusieurs familles de méthodes ayant pour objectif d'extraire des informations à partir de données non étiquetées. Parmi celles-ci, le *clustering*, également appelé classification non supervisée, consiste à répartir les observations d'un jeu de données en plusieurs groupes, appelés clusters.
-
-L'objectif est de réunir au sein d'un même groupe les observations présentant des caractéristiques similaires, tout en distinguant autant que possible les observations appartenant à des groupes différents. Contrairement à la classification supervisée, les groupes ne sont pas définis à l'avance. L'algorithme doit donc identifier lui-même une organisation pertinente des données, à partir des informations dont il dispose.
-
-Le clustering peut répondre à différents objectifs, notamment identifier des profils similaires au sein d'une population, regrouper des individus présentant des caractéristiques communes ou encore découvrir des structures dans des données complexes.
-
-Il existe cependant plusieurs manières de construire ces groupes. Les méthodes de clustering se distinguent notamment par la façon dont elles mesurent les ressemblances entre observations et par les règles utilisées pour former les groupes.
-
-## B. Les principales familles de méthodes de clustering
-
-Il existe différentes approches pour réaliser une classification non supervisée. Parmi les plus connues, on peut notamment distinguer les méthodes de partitionnement, les méthodes hiérarchiques et les méthodes fondées sur la densité.
-
-Concernant les méthodes de partitionnement,elles cherchent à répartir directement les observations en un nombre déterminé de groupes. L'algorithme K-means en est un exemple classique. Il consiste à attribuer chaque observation au centre de groupe le plus proche, puis à actualiser ces centres jusqu'à obtenir une certaine stabilité. Cette approche nécessite généralement de définir le nombre de groupes souhaité avant de lancer l'algorithme. On verra donc qu'Affinity Propagation est un algorithme particulier de cette famille.
-
-Les méthodes hiérarchiques quant à elles construisent une organisation des observations sous la forme d'une hiérarchie de groupes. Dans une approche ascendante, chaque observation constitue initialement un groupe individuel, puis les groupes les plus proches sont progressivement fusionnés. Les résultats peuvent être représentés à l'aide d'un dendrogramme, qui permet de visualiser les différentes étapes de regroupement.
-
-Finalement, les méthodes fondées sur la densité cherchent à identifier des zones dans lesquelles les observations sont particulièrement concentrées. DBSCAN (Density-Based Spatial Clustering of Applications with Noise) est un exemple de cette famille. Il permet notamment d'identifier des groupes de formes variées et de distinguer les observations considérées comme du bruit.
-
-Ces différentes approches reposent sur des principes distincts et présentent chacune des avantages et des limites selon la structure des données étudiées.
-
-## C. La place de l'Affinity Propagation
-
-L'algorithme Affinity Propagation, proposé par Brendan J. Frey et Delbert Dueck en 2007, constitue une approche particulière du clustering.
-
-Contrairement à K-means, il ne nécessite pas de fixer directement le nombre de groupes avant l'exécution de l'algorithme. Il repose sur les similarités entre les observations et cherche à identifier des observations représentatives, appelées "exemplars", qui serviront de représentants aux différents groupes. Chaque observation est ensuite associée à l'un de ces exemplaires, ce qui permet de constituer les clusters.
-
-Le fonctionnement de l'algorithme repose sur des échanges itératifs de messages entre les observations. Ces messages permettent progressivement de déterminer quelles observations sont les plus pertinentes pour représenter les groupes.
-
-L'Affinity Propagation se distingue ainsi par son principe de sélection des représentants : plutôt que de construire des centres artificiels, comme dans K-means, il sélectionne des observations réellement présentes dans le jeu de données. Cette particularité constitue l'un des éléments centraux de son fonctionnement et sera étudiée plus en détail dans les parties suivantes.

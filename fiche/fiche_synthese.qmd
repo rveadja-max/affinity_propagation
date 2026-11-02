@@ -3,12 +3,57 @@ title: "Affinity Propagation — fiche de synthèse"
 author:
   - "Hervé ADJAKOSSA"
   - "Marie DE AMORIM PEREIRA DA SILVA"
+date: "5 novembre 2026"
 lang: fr
 format:
   pdf:
     papersize: a4
-    geometry: margin=1.5cm
-    fontsize: 10pt
+    geometry: margin=1.4cm
+    fontsize: 9pt
 ---
 
 <!-- Fiche d'une page A4 stricte, à rendre au plus tard le 03/11/2026. -->
+
+**En une phrase.** Affinity Propagation (AP, Frey & Dueck, *Science* 2007) est un algorithme de **clustering** qui choisit des **exemplaires réels** parmi les observations et fait émerger le **nombre de groupes** d'un échange itératif de messages, sans fixer $k$ à l'avance.
+
+## Principe
+
+À partir d'une matrice de **similarités** $s(i,k)$ — souvent moins la distance euclidienne au carré — chaque observation négocie avec les autres via deux messages :
+
+- **responsabilité** $r(i,k) \leftarrow s(i,k) - \max_{k'\neq k}\{a(i,k')+s(i,k')\}$ : à quel point $x_k$ représenterait bien $x_i$ ;
+- **disponibilité** $a(i,k) \leftarrow \min\{0,\ r(k,k) + \sum_{i'\notin\{i,k\}} \max(0, r(i',k))\}$ : à quel point $x_i$ devrait choisir $x_k$.
+
+Les itérations alternent ces mises à jour, **amorties** par $\lambda$ (les messages, pas les préférences) pour éviter les oscillations. $x_k$ devient exemplaire quand $r(k,k)+a(k,k)>0$ ; chaque point rejoint l'exemplaire maximisant $a(i,k)+r(i,k)$. AP maximise une approximation de la somme des similarités aux exemplaires.
+
+## Paramètres clés
+
+| Paramètre | Rôle | Réglage usuel |
+|---|---|---|
+| **Préférence** $s(k,k)$ | seuil d'exigence pour devenir exemplaire ; **gouverne le nombre de clusters** | médiane des similarités (défaut) ; minimum → peu de groupes |
+| **Amortissement** $\lambda$ | lisse les messages, stabilise | 0,5 à 0,9 ; plus haut = plus lent |
+| `maxits` / `convits` | budget et critère d'arrêt | 1000 / 100 |
+
+## Pourquoi le nombre de groupes varie
+
+Préférence basse : chaque point accepte d'être représenté par une voisine → **peu** d'exemplaires. Préférence haute : chacun s'estime irremplaçable → **beaucoup** d'exemplaires. Le nombre obtenu dépend donc conjointement des similarités et de ce paramètre : il n'est **jamais « optimal »** et doit être documenté (balayage de sensibilité).
+
+## AP face aux méthodes de référence
+
+K-means impose $k$ et des centroïdes fictifs ; K-medoids impose $k$ mais garde des représentants réels ; la hiérarchique fournit une échelle de regroupements à découper. AP s'affranchit de $k$ avec des exemplaires réels, au prix d'une mémoire en $O(n^2)$ et d'une sensibilité à la préférence (comparaison menée à $k$ fixé dans notre TP).
+
+## Mise en œuvre (dépôt : dossier `tp/`)
+
+```r
+library(apcluster)
+S <- negDistMat(scale(iris[, 1:4]), r = 2)   # similarité -||xi-xk||^2
+res <- apcluster(S, q = 0.5, lam = 0.9)      # préférence = médiane
+```
+
+```python
+from sklearn.cluster import AffinityPropagation
+ap = AffinityPropagation(damping=0.9, random_state=2026).fit(X_std)
+```
+
+Sur Iris standardisé (résultats reproduits localement) : de 3 clusters ($q=0$, ARI = 0,631) à 9 clusters à la préférence médiane (ARI = 0,354) — le réglage par défaut fragmente la structure. Limites : jeux petits à moyens, préférence à balayer, convergence à surveiller.
+
+**Références :** Frey & Dueck (2007), *Science* 315, 972–976, doi:10.1126/science.1136800 · Bodenhofer et al. (2011), *Bioinformatics* 27(17), doi:10.1093/bioinformatics/btr406 · Brusco & Köhn (2008), *Science* 319, 726, doi:10.1126/science.1150921 · Pedregosa et al. (2011), *JMLR* 12 (scikit-learn).
