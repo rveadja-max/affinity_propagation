@@ -1,0 +1,3 @@
+# Fondements
+
+Texte inclus [@frey2007clustering].

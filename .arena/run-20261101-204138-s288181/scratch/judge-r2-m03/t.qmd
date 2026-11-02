@@ -1,0 +1,29 @@
+---
+title: "T"
+author: "A"
+documentclass: memoirerecherche
+lang: fr
+evaluation: "R"
+diplome: "X"
+anac: "2026"
+module: "M"
+enseig: "E"
+coefficient: "X"
+git: "g"
+bibliography: bibliography.bib
+format:
+  pdf:
+    template: template.tex
+    pdf-engine: xelatex
+    cite-method: biblatex
+---
+
+| a | b |
+|---|---|
+| 1 | 2 |
+
+: Cap {#tbl-x}
+
+```{r}
+1+1
+```

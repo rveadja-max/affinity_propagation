@@ -1,0 +1,22 @@
+{
+  "match": "r1-m03",
+  "scores": {
+    "a006": {"correctness": 6, "completeness": 9, "specificity": 8, "robustness": 9, "clarity": 8, "fatal": false},
+    "a003": {"correctness": 5, "completeness": 9, "specificity": 9, "robustness": 9, "clarity": 7, "fatal": false}
+  },
+  "winner": "a006",
+  "reason": "a003 still tells the user (§3.2 point 4, §3.5) that λ changes the speed but not the partition on Iris, which I re-ran and found false (exemplars differ, identical(labels) is FALSE), so a false result is fed into the report plan. a006 corrected that finding and its line references check out. Its own slip, building on knitr inline chunks without saying that knitr is not installed, fails loudly and is easy to fix.",
+  "survived": [
+    "E2 false 'λ neutral' claim: fixed, now reports different exemplars and ARI between partitions",
+    "self-contradictory calendar for section 3 and the fiche: fixed with a single draft→fiche→slides→finish order",
+    "section 8 had no deadline or fallback: fixed (transcript by 05, fallback on 06 at 18h, wc/grep checks)",
+    "TP had no completion check: fixed (R --vanilla run, seed, sessionInfo, capture-environment, dry run on 04)",
+    "formals(apcluster) returns an empty table: fixed with apcluster:::apcluster.matrix",
+    "R2 and k for r3 left undefined: fixed (r2 chunk; every distinct k from 2 to 15, table at k=9)",
+    "G1 git commit count wrong: fixed (5 commits, e9ab1b1, dea0014 as login)"
+  ],
+  "standing": {
+    "a006": [],
+    "a003": []
+  }
+}

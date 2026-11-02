@@ -1,0 +1,11 @@
+{
+  "match": "r1-m05",
+  "scores": {
+    "a005": {"correctness": 8, "completeness": 9, "specificity": 8, "robustness": 9, "clarity": 8, "fatal": false},
+    "a010": {"correctness": 7, "completeness": 8, "specificity": 9, "robustness": 9, "clarity": 8, "fatal": false}
+  },
+  "winner": "a005",
+  "reason": "Both fixed every attack, but a010's calendar still has the slides written on their due day (04/11), an unspecified merge into main on 04/11 that would carry the draft report, and no Moodle posting of the fiche, while a005's only comparable gap is an undefined stability ARI rule.",
+  "survived": ["k for the equal-k comparison never fixed / q=0 leakage (fixed: every distinct k from the q grid, k < n/2, check #10)", "champ d'application missing (fixed: paragraph + done-criterion in part 1)", "fiche and slides not scheduled, fiche Moodle diffusion missing (fixed: fiche Sun-Mon, posted Tue; slides Mon-Tue)", "merging Rapport into main on 04/11 (fixed: release/oral with fiche/slides/tp/README only)", "ichéité section conditional yet budgeted, transcription never requested (fixed: request on Sunday, budget with and without)"],
+  "standing": {"a005": [], "a010": []}
+}

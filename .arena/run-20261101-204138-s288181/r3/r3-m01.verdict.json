@@ -1,0 +1,21 @@
+{
+  "match": "r3-m01",
+  "scores": {
+    "a011": {"correctness": 8, "completeness": 9, "specificity": 9, "robustness": 9, "clarity": 7, "fatal": false},
+    "a012": {"correctness": 7, "completeness": 7, "specificity": 8, "robustness": 8, "clarity": 7, "fatal": false}
+  },
+  "winner": "a011",
+  "reason": "a011 fixed all six attacks and now covers the whole guiding question: a compulsory similarity/standardisation sub-part, a compulsory minimal stability test, sourced content for the probabilistic hypotheses and a reproducible way to get Wine; a012 makes stability optional (against the project's sensitivity/stability rule), never tests similarity although the guiding question names it, leaves the probabilistic item thin, and wrongly says the existing PDF is stale (git status shows the .qmd unchanged since the 11:05 commit, before the 12:12 PDF).",
+  "survived": [
+    "guiding question's similarity/standardisation half untested: fixed with compulsory sub-part 5.6 and a mapping table in § 4.4",
+    "probabilistic hypotheses item empty: fixed with three status-labelled answers, a candidate source (metadata checked) and a fallback",
+    "Rscript glob runs only the first file: fixed with analyses/run_all.R and a shell loop",
+    "aricode never installed: install step added as the first 02/11 task, plus a package check in 00_config.R and the README",
+    "no way to get Wine and the wine.txt trap not mentioned: fixed with a download plus SHA-256 check, data/raw/PROVENANCE.md and a grep check",
+    "small branches left unmerged: fixed, merged into Rapport straight away, with a 04/11 18:00 check using git branch --no-merged"
+  ],
+  "standing": {
+    "a011": [],
+    "a012": []
+  }
+}

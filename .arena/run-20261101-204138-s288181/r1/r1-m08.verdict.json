@@ -1,0 +1,14 @@
+{
+  "match": "r1-m08",
+  "scores": {
+    "a009": {"correctness": 7, "completeness": 7, "specificity": 9, "robustness": 7, "clarity": 8, "fatal": false},
+    "a011": {"correctness": 8, "completeness": 8, "specificity": 8, "robustness": 8, "clarity": 8, "fatal": false}
+  },
+  "winner": "a011",
+  "reason": "Both fixed every attack, but a009 still makes stability (Q5) optional and the first thing cut, against the project rule, and it never fixes how k is chosen for the comparisons; a011 makes a minimal stability study mandatory, writes a k rule before any ARI is computed, and checks its DOIs and its apcluster seed trap (reproduced: identical(a,b) TRUE).",
+  "survived": ["cadre_theorique.md line citations past the end of the file: fixed, re-checked lines 24/28/42/44/57/69", "stability optional: fixed, mandatory minimal 5.5 plus checklist item", "k of the comparisons undefined: fixed with a pre-registered q grid and every distinct k", "analogy page budget: fixed to 1.5 p"],
+  "standing": {
+    "a009": ["(judge) stability Q5 still optional and the first thing cut, which breaks the CLAUDE.md rule", "(judge) k for the comparisons left as 'imposé par AP' with no rule; the probe is centred on q=0, k=3"],
+    "a011": ["(judge) the fiche is finished and sent on Tue 03/11 itself, although the strict deadline is 03/11 at 10h"]
+  }
+}

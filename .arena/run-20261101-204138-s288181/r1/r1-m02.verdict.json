@@ -1,0 +1,22 @@
+{
+  "match": "r1-m02",
+  "scores": {
+    "a015": {"correctness": 8, "completeness": 9, "specificity": 9, "robustness": 9, "clarity": 8, "fatal": false},
+    "a014": {"correctness": 8, "completeness": 8, "specificity": 8, "robustness": 8, "clarity": 8, "fatal": false}
+  },
+  "winner": "a015",
+  "reason": "Both fixed every attack, but a015's revised plan also covers the standardisation half of Q5, defines a fair cost criterion for K-means and Ward in the comparison table, and gives a timed, testable 40-minute TP tested on 03/11. a014 still leaves all three gaps open: z-score only, an undefined 'somme des dissimilarités aux représentants', and the TP tested on the 04/11 deadline day.",
+  "survived": [
+    "stability optional / standardisation missing -> script 05 mandatory, Tab. 4 + Fig. 3",
+    "undefined Tab. 1 cost for K-means/Ward -> two costs defined for all methods",
+    "grep French decimals vs CSV fails -> inline f() with comma + chiffres_texte.csv fallback",
+    "TP and slides crammed on 04/11 -> §5.1 timed TP, clean-machine test on 03/11, merge before 20h",
+    "D7 partial report on main -> report stays on Rapport",
+    "README wrongly called untracked -> corrected to tracked-modified",
+    "ichéité grep -c unusable -> grep -n with section bounds"
+  ],
+  "standing": {
+    "a015": [],
+    "a014": []
+  }
+}

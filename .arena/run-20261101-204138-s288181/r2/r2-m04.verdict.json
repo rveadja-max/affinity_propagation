@@ -1,0 +1,22 @@
+{
+  "match": "r2-m04",
+  "scores": {
+    "a011": {"correctness": 8, "completeness": 9, "specificity": 9, "robustness": 9, "clarity": 7, "fatal": false},
+    "a016": {"correctness": 7, "completeness": 8, "specificity": 9, "robustness": 9, "clarity": 8, "fatal": false}
+  },
+  "winner": "a011",
+  "reason": "Both fixed every attack, but a011 is more correct on unattacked points: it flags both determinism errors (methodologie.md:18 and :80), gives a fair equal-k stability design and catches the apcluster global-seed pitfall, and verifies the DOIs and the Wine licence externally; a016 still lets a stability comparison with varying k through, misses l.80, leaves the Wine licence unverified, calls the PDF stale when it is not, and puts stability (required by the project rules) on its cut list.",
+  "survived": [
+    "biased stability comparison (fixed: (a) fixed preference, (b) apclusterK at equal k)",
+    "no target branch on day 1 (fixed: Rapport as default, push without merge until Marie agrees)",
+    "no fallback before the oral (fixed: fallback table for 02-04/11)",
+    "λ/stability numbers on slides before scripts exist (fixed: shown without numbers until 06/11)",
+    "determinism error left at methodologie.md:80 (fixed: both lines flagged)",
+    "unsupported claim about who wrote the untracked files (fixed: marked non vérifié)",
+    "fiche sent after the 48 h limit (fixed: sent 03/11 before 10h)"
+  ],
+  "standing": {
+    "a011": [],
+    "a016": []
+  }
+}

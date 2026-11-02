@@ -1,0 +1,24 @@
+{
+  "match": "r2-m03",
+  "scores": {
+    "a006": {"correctness": 5, "completeness": 8, "specificity": 8, "robustness": 7, "clarity": 8, "fatal": false},
+    "a007": {"correctness": 8, "completeness": 9, "specificity": 9, "robustness": 9, "clarity": 7, "fatal": false}
+  },
+  "winner": "a007",
+  "reason": "a006 builds its whole pipeline on R chunks in the .qmd, but knitr and rmarkdown are not installed (the judge's render of an R chunk failed with 'The rmarkdown package is not available'), and it misses the template's uncaptioned-table crash ('No counter none', reproduced); a007 found and planned around both and fixed all five attacks against it.",
+  "survived": [
+    "results.yml missing on day 1: a one-line stub is now created in Chantier 0",
+    "md5 check broken by timings: timings moved to logs/, results.yml rewritten in full and checked",
+    "preference that sets k was unspecified: label-free q_main/q_low rule fixed in advance, both reported",
+    "TP tied to the report plumbing: TP is now self-contained, with a check script and a test from outside the repo",
+    "fiche distribution: promo, teachers and Moodle now stated"
+  ],
+  "standing": {
+    "a006": [
+      "found by the judge: the R-chunk pipeline needs knitr/rmarkdown, which are not installed, and the plan never says to install them",
+      "found by the judge: tables without a caption crash the URCA template; not mentioned",
+      "the fix for attack 7 (TP loads tp/ap_commun.R with source()) breaks when students run the TP from another working directory"
+    ],
+    "a007": []
+  }
+}

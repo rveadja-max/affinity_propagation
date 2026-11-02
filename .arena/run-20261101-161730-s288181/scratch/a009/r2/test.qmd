@@ -1,0 +1,36 @@
+---
+title: "L'algorithme Affinity Propagation"
+author:
+  - "Hervé ADJAKOSSA"
+  - "Marie DE AMORIM PEREIRA DA SILVA"
+date: "10 novembre 2026"
+lang: fr
+evaluation: "Rapport de projet"
+diplome: "À compléter"
+anac: "2026-2027"
+module: "Apprentissage non supervisé"
+enseig: "Frédéric Blanchard, Philippe Regnault"
+coefficient: "À compléter"
+git: "https://gitlab-mi.univ-reims.fr/dea0014/affinity_propagation"
+abstract: "Résumé test."
+keywords: [affinity propagation, clustering]
+bibliography: bibliography.bib
+cite-method: biblatex
+format:
+  pdf:
+    documentclass: memoirerecherche
+    template: template.tex
+    pdf-engine: xelatex
+    toc: true
+    number-sections: true
+---
+
+# Introduction {.unnumbered}
+
+AP choisit des exemplaires [@frey2007clustering] ; implémentation R [@bodenhofer2011apcluster].
+
+# Positionnement
+
+## Clustering
+
+Texte.

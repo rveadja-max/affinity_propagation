@@ -1,0 +1,777 @@
+{
+ "version": 1,
+ "created": "2026-11-01 20:41:38",
+ "seed": 288181,
+ "agents_n": 16,
+ "cards_available": 2160,
+ "wave": 10,
+ "dir": "/home/vechoadjax/projet-python/project-affinity-propagation/affinity_propagation/.arena/run-20261101-204138-s288181",
+ "has_baseline": false,
+ "agents": {
+  "a001": {
+   "card": {
+    "reasoning": {
+     "id": "systems-thinking",
+     "name": "Systems thinking",
+     "how": "Map the moving parts, how they affect each other, and what happens second and third order. Optimise the whole system, not just the one part the task points at."
+    },
+    "workflow": {
+     "id": "outline-first",
+     "name": "Outline first",
+     "how": "Write a skeleton outline, check the outline against every requirement in the task, fix it, and only then fill it in."
+    },
+    "strategy": {
+     "id": "speed",
+     "name": "Speed",
+     "how": "Optimise for the fastest route to something usable today. Cut anything that does not move the result."
+    }
+   },
+   "solution": "/home/vechoadjax/projet-python/project-affinity-propagation/affinity_propagation/.arena/run-20261101-204138-s288181/r1/r1-m01.a001.solution.md",
+   "alive": false,
+   "eliminated_in": 1,
+   "eliminated_by": "a016",
+   "byes": 0
+  },
+  "a002": {
+   "card": {
+    "reasoning": {
+     "id": "inversion",
+     "name": "Inversion",
+     "how": "Ask what would make this answer fail. List every way it could, then build the answer that makes each of those failures impossible."
+    },
+    "workflow": {
+     "id": "iterative-deepening",
+     "name": "Iterative deepening",
+     "how": "Write a one-paragraph answer first. Then expand the parts that matter most in two more passes, each one deeper than the last."
+    },
+    "strategy": {
+     "id": "completeness",
+     "name": "Completeness",
+     "how": "Leave out nothing the task asks for or clearly implies. Cover every requirement explicitly."
+    }
+   },
+   "solution": "/home/vechoadjax/projet-python/project-affinity-propagation/affinity_propagation/.arena/run-20261101-204138-s288181/r2/r2-m01.a002.solution.md",
+   "alive": false,
+   "eliminated_in": 2,
+   "eliminated_by": "a012",
+   "byes": 0
+  },
+  "a003": {
+   "card": {
+    "reasoning": {
+     "id": "constraint-first",
+     "name": "Constraint first",
+     "how": "List every hard constraint, stated and implied: time, budget, tools, format, audience, platform. Solve strictly inside that box and let the tightest constraint drive the design."
+    },
+    "workflow": {
+     "id": "build-then-break",
+     "name": "Build, then break",
+     "how": "Build the answer. Then throw five hostile inputs or scenarios at it, write down what breaks, and patch every break."
+    },
+    "strategy": {
+     "id": "edge-cases-first",
+     "name": "Edge cases first",
+     "how": "Hunt the edge cases, failure modes and weird inputs first, and design the answer around surviving them."
+    }
+   },
+   "solution": "/home/vechoadjax/projet-python/project-affinity-propagation/affinity_propagation/.arena/run-20261101-204138-s288181/r1/r1-m03.a003.solution.md",
+   "alive": false,
+   "eliminated_in": 1,
+   "eliminated_by": "a006",
+   "byes": 0
+  },
+  "a004": {
+   "card": {
+    "reasoning": {
+     "id": "dialectical",
+     "name": "Dialectical",
+     "how": "State the strongest version of one answer, then the strongest opposing answer, then write the synthesis that keeps what is true in both."
+    },
+    "workflow": {
+     "id": "iterative-deepening",
+     "name": "Iterative deepening",
+     "how": "Write a one-paragraph answer first. Then expand the parts that matter most in two more passes, each one deeper than the last."
+    },
+    "strategy": {
+     "id": "explicit-trade-offs",
+     "name": "Explicit trade-offs",
+     "how": "Name the real trade-offs, choose for the user's most likely constraints, and say plainly what that choice gives up."
+    }
+   },
+   "solution": "/home/vechoadjax/projet-python/project-affinity-propagation/affinity_propagation/.arena/run-20261101-204138-s288181/r1/r1-m07.a004.solution.md",
+   "alive": false,
+   "eliminated_in": 1,
+   "eliminated_by": "a007",
+   "byes": 0
+  },
+  "a005": {
+   "card": {
+    "reasoning": {
+     "id": "contrarian",
+     "name": "Contrarian",
+     "how": "Write down the obvious default answer, then argue seriously against it. Keep only what survives the argument, even if that takes you the unpopular way."
+    },
+    "workflow": {
+     "id": "test-first",
+     "name": "Test first",
+     "how": "Before writing the answer, write the checks it must pass: acceptance tests for code, pass or fail criteria for anything else. Then write the answer and run every check against it."
+    },
+    "strategy": {
+     "id": "fewest-moving-parts",
+     "name": "Fewest moving parts",
+     "how": "Remove things until it breaks, then put the last one back. Fewer steps, fewer dependencies, fewer words."
+    }
+   },
+   "solution": "/home/vechoadjax/projet-python/project-affinity-propagation/affinity_propagation/.arena/run-20261101-204138-s288181/r2/r2-m02.a005.solution.md",
+   "alive": false,
+   "eliminated_in": 2,
+   "eliminated_by": "a015",
+   "byes": 0
+  },
+  "a006": {
+   "card": {
+    "reasoning": {
+     "id": "working-backwards",
+     "name": "Working backwards",
+     "how": "Describe the finished result precisely, as if it already exists. Then work backwards, step by step, to where the user is right now."
+    },
+    "workflow": {
+     "id": "requirements-checklist",
+     "name": "Requirements checklist",
+     "how": "Pull every requirement out of the task into a numbered list. Solve, then tick each item off and say exactly where it is met."
+    },
+    "strategy": {
+     "id": "fewest-moving-parts",
+     "name": "Fewest moving parts",
+     "how": "Remove things until it breaks, then put the last one back. Fewer steps, fewer dependencies, fewer words."
+    }
+   },
+   "solution": "/home/vechoadjax/projet-python/project-affinity-propagation/affinity_propagation/.arena/run-20261101-204138-s288181/r2/r2-m03.a006.solution.md",
+   "alive": false,
+   "eliminated_in": 2,
+   "eliminated_by": "a007",
+   "byes": 0
+  },
+  "a007": {
+   "card": {
+    "reasoning": {
+     "id": "socratic",
+     "name": "Socratic",
+     "how": "Interrogate the task with the questions a sharp expert would ask before starting. Answer each one explicitly and let the answers decide the shape of the solution."
+    },
+    "workflow": {
+     "id": "options-matrix",
+     "name": "Options matrix",
+     "how": "List the realistic options, score them in a small matrix against the criteria that matter for this task, choose one, and write up the choice."
+    },
+    "strategy": {
+     "id": "speed",
+     "name": "Speed",
+     "how": "Optimise for the fastest route to something usable today. Cut anything that does not move the result."
+    }
+   },
+   "solution": "/home/vechoadjax/projet-python/project-affinity-propagation/affinity_propagation/.arena/run-20261101-204138-s288181/r3/r3-m02.a007.solution.md",
+   "alive": false,
+   "eliminated_in": 3,
+   "eliminated_by": "a015",
+   "byes": 0
+  },
+  "a008": {
+   "card": {
+    "reasoning": {
+     "id": "socratic",
+     "name": "Socratic",
+     "how": "Interrogate the task with the questions a sharp expert would ask before starting. Answer each one explicitly and let the answers decide the shape of the solution."
+    },
+    "workflow": {
+     "id": "research-then-synthesise",
+     "name": "Research, then synthesise",
+     "how": "Gather every relevant fact first: the task, any files or context it points to, what is known about the domain. Write nothing until the research is done, then synthesise."
+    },
+    "strategy": {
+     "id": "user-empathy",
+     "name": "User empathy first",
+     "how": "Start from the person who will use this: their situation, their skill level, and what they will actually do next. Shape everything around that."
+    }
+   },
+   "solution": "/home/vechoadjax/projet-python/project-affinity-propagation/affinity_propagation/.arena/run-20261101-204138-s288181/r1/r1-m04.a008.solution.md",
+   "alive": false,
+   "eliminated_in": 1,
+   "eliminated_by": "a012",
+   "byes": 0
+  },
+  "a009": {
+   "card": {
+    "reasoning": {
+     "id": "first-principles",
+     "name": "First principles",
+     "how": "Strip the task down to the facts and requirements nobody can argue with. Rebuild the answer from those alone, and keep a convention only if it earns its place again."
+    },
+    "workflow": {
+     "id": "draft-critique-rewrite",
+     "name": "Draft, critique, rewrite",
+     "how": "Write a complete first draft. Critique it line by line against the task as if someone else wrote it. Then rewrite it from scratch using the critique."
+    },
+    "strategy": {
+     "id": "concrete-specifics",
+     "name": "Concrete specifics",
+     "how": "Exact numbers, names, commands, file paths and steps. Zero generic advice."
+    }
+   },
+   "solution": "/home/vechoadjax/projet-python/project-affinity-propagation/affinity_propagation/.arena/run-20261101-204138-s288181/r1/r1-m08.a009.solution.md",
+   "alive": false,
+   "eliminated_in": 1,
+   "eliminated_by": "a011",
+   "byes": 0
+  },
+  "a010": {
+   "card": {
+    "reasoning": {
+     "id": "analogy",
+     "name": "Analogy",
+     "how": "Find a problem in a different field that has already been solved and has the same shape. Port its solution over, then fix every place where the analogy breaks."
+    },
+    "workflow": {
+     "id": "write-then-restructure",
+     "name": "Write, then restructure",
+     "how": "Write freely and fast. Then outline what you actually wrote, fix the structure, and rewrite it to the new outline."
+    },
+    "strategy": {
+     "id": "fewest-moving-parts",
+     "name": "Fewest moving parts",
+     "how": "Remove things until it breaks, then put the last one back. Fewer steps, fewer dependencies, fewer words."
+    }
+   },
+   "solution": "/home/vechoadjax/projet-python/project-affinity-propagation/affinity_propagation/.arena/run-20261101-204138-s288181/r1/r1-m05.a010.solution.md",
+   "alive": false,
+   "eliminated_in": 1,
+   "eliminated_by": "a005",
+   "byes": 0
+  },
+  "a011": {
+   "card": {
+    "reasoning": {
+     "id": "working-backwards",
+     "name": "Working backwards",
+     "how": "Describe the finished result precisely, as if it already exists. Then work backwards, step by step, to where the user is right now."
+    },
+    "workflow": {
+     "id": "draft-critique-rewrite",
+     "name": "Draft, critique, rewrite",
+     "how": "Write a complete first draft. Critique it line by line against the task as if someone else wrote it. Then rewrite it from scratch using the critique."
+    },
+    "strategy": {
+     "id": "built-to-last",
+     "name": "Built to last",
+     "how": "Optimise for how this holds up in six months: easy to maintain, easy to extend, no traps for the next person."
+    }
+   },
+   "solution": "/home/vechoadjax/projet-python/project-affinity-propagation/affinity_propagation/.arena/run-20261101-204138-s288181/r4/r4-m01.a011.solution.md",
+   "alive": false,
+   "eliminated_in": 4,
+   "eliminated_by": "a015",
+   "byes": 0
+  },
+  "a012": {
+   "card": {
+    "reasoning": {
+     "id": "first-principles",
+     "name": "First principles",
+     "how": "Strip the task down to the facts and requirements nobody can argue with. Rebuild the answer from those alone, and keep a convention only if it earns its place again."
+    },
+    "workflow": {
+     "id": "options-matrix",
+     "name": "Options matrix",
+     "how": "List the realistic options, score them in a small matrix against the criteria that matter for this task, choose one, and write up the choice."
+    },
+    "strategy": {
+     "id": "completeness",
+     "name": "Completeness",
+     "how": "Leave out nothing the task asks for or clearly implies. Cover every requirement explicitly."
+    }
+   },
+   "solution": "/home/vechoadjax/projet-python/project-affinity-propagation/affinity_propagation/.arena/run-20261101-204138-s288181/r3/r3-m01.a012.solution.md",
+   "alive": false,
+   "eliminated_in": 3,
+   "eliminated_by": "a011",
+   "byes": 0
+  },
+  "a013": {
+   "card": {
+    "reasoning": {
+     "id": "adversarial",
+     "name": "Adversarial",
+     "how": "Picture the harshest expert reviewer trying to tear the answer apart. Write their attacks down first and build the answer backwards from them."
+    },
+    "workflow": {
+     "id": "build-then-break",
+     "name": "Build, then break",
+     "how": "Build the answer. Then throw five hostile inputs or scenarios at it, write down what breaks, and patch every break."
+    },
+    "strategy": {
+     "id": "simplest",
+     "name": "Simplest thing that works",
+     "how": "Pick the least complicated answer that fully does the job. Every extra part has to justify itself."
+    }
+   },
+   "solution": "/home/vechoadjax/projet-python/project-affinity-propagation/affinity_propagation/.arena/run-20261101-204138-s288181/r1/r1-m06.a013.solution.md",
+   "alive": false,
+   "eliminated_in": 1,
+   "eliminated_by": "a002",
+   "byes": 0
+  },
+  "a014": {
+   "card": {
+    "reasoning": {
+     "id": "contrarian",
+     "name": "Contrarian",
+     "how": "Write down the obvious default answer, then argue seriously against it. Keep only what survives the argument, even if that takes you the unpopular way."
+    },
+    "workflow": {
+     "id": "write-then-restructure",
+     "name": "Write, then restructure",
+     "how": "Write freely and fast. Then outline what you actually wrote, fix the structure, and rewrite it to the new outline."
+    },
+    "strategy": {
+     "id": "clarity",
+     "name": "Clarity above all",
+     "how": "Make it the easiest answer to read and act on: plain words, obvious structure, nothing the reader has to decode."
+    }
+   },
+   "solution": "/home/vechoadjax/projet-python/project-affinity-propagation/affinity_propagation/.arena/run-20261101-204138-s288181/r1/r1-m02.a014.solution.md",
+   "alive": false,
+   "eliminated_in": 1,
+   "eliminated_by": "a015",
+   "byes": 0
+  },
+  "a015": {
+   "card": {
+    "reasoning": {
+     "id": "evidence-first",
+     "name": "Evidence first",
+     "how": "Ground every claim in something checkable: the task text, the files it points to, the numbers given, documentation. Anything you cannot check gets labelled as an assumption."
+    },
+    "workflow": {
+     "id": "requirements-checklist",
+     "name": "Requirements checklist",
+     "how": "Pull every requirement out of the task into a numbered list. Solve, then tick each item off and say exactly where it is met."
+    },
+    "strategy": {
+     "id": "concrete-specifics",
+     "name": "Concrete specifics",
+     "how": "Exact numbers, names, commands, file paths and steps. Zero generic advice."
+    }
+   },
+   "solution": "/home/vechoadjax/projet-python/project-affinity-propagation/affinity_propagation/.arena/run-20261101-204138-s288181/r4/r4-m01.a015.solution.md",
+   "alive": true,
+   "eliminated_in": null,
+   "eliminated_by": null,
+   "byes": 0
+  },
+  "a016": {
+   "card": {
+    "reasoning": {
+     "id": "decomposition",
+     "name": "Decomposition",
+     "how": "Break the task into independent sub-problems. Solve each one completely, then integrate them and test the seams where they meet."
+    },
+    "workflow": {
+     "id": "research-then-synthesise",
+     "name": "Research, then synthesise",
+     "how": "Gather every relevant fact first: the task, any files or context it points to, what is known about the domain. Write nothing until the research is done, then synthesise."
+    },
+    "strategy": {
+     "id": "explicit-trade-offs",
+     "name": "Explicit trade-offs",
+     "how": "Name the real trade-offs, choose for the user's most likely constraints, and say plainly what that choice gives up."
+    }
+   },
+   "solution": "/home/vechoadjax/projet-python/project-affinity-propagation/affinity_propagation/.arena/run-20261101-204138-s288181/r2/r2-m04.a016.solution.md",
+   "alive": false,
+   "eliminated_in": 2,
+   "eliminated_by": "a011",
+   "byes": 0
+  }
+ },
+ "rounds": [
+  {
+   "n": 1,
+   "alive": [
+    "a001",
+    "a002",
+    "a003",
+    "a004",
+    "a005",
+    "a006",
+    "a007",
+    "a008",
+    "a009",
+    "a010",
+    "a011",
+    "a012",
+    "a013",
+    "a014",
+    "a015",
+    "a016"
+   ],
+   "matches": [
+    {
+     "id": "r1-m01",
+     "a": "a016",
+     "b": "a001",
+     "winner": "a016",
+     "loser": "a001",
+     "reason": "Both fixed every attack, but a001's plan relies on knitr chunks and inline `r` values (plus NMI) without ever planning to install knitr/rmarkdown or update the README, and it has no strategy for two people editing one .qmd; I confirmed knitr, rmarkdown and aricode are absent. a016 covers dependencies, the README, per-chapter include files with a merge order, and a fiche with an owner and a Moodle ",
+     "survived": [
+      "same-day edits of one .qmd: fixed with D9 per-chapter includes and a merge order",
+      "fiche had no owner or Moodle deposit: fixed (Marie on 02/11, deposited before 03/11 noon)",
+      "README not updated for new packages: fixed in the 02/11 lot",
+      "dea0014 left unverified and Herv\u00e9's GitLab identity: fixed and checked",
+      "summary listed D1-D6 only: fixed to D1-D9",
+      "author \\and justification wrong: fixed, Marie's & kept"
+     ],
+     "scores": {
+      "a016": 86.0,
+      "a001": 79.0
+     },
+     "source": "judge"
+    },
+    {
+     "id": "r1-m02",
+     "a": "a015",
+     "b": "a014",
+     "winner": "a015",
+     "loser": "a014",
+     "reason": "Both fixed every attack, but a015's revised plan also covers the standardisation half of Q5, defines a fair cost criterion for K-means and Ward in the comparison table, and gives a timed, testable 40-minute TP tested on 03/11. a014 still leaves all three gaps open: z-score only, an undefined 'somme des dissimilarit\u00e9s aux repr\u00e9sentants', and the TP tested on the 04/11 deadline day.",
+     "survived": [
+      "stability optional / standardisation missing -> script 05 mandatory, Tab. 4 + Fig. 3",
+      "undefined Tab. 1 cost for K-means/Ward -> two costs defined for all methods",
+      "grep French decimals vs CSV fails -> inline f() with comma + chiffres_texte.csv fallback",
+      "TP and slides crammed on 04/11 -> \u00a75.1 timed TP, clean-machine test on 03/11, merge before 20h",
+      "D7 partial report on main -> report stays on Rapport",
+      "README wrongly called untracked -> corrected to tracked-modified",
+      "ich\u00e9it\u00e9 grep -c unusable -> grep -n with section bounds"
+     ],
+     "scores": {
+      "a015": 86.0,
+      "a014": 80.0
+     },
+     "source": "judge"
+    },
+    {
+     "id": "r1-m03",
+     "a": "a006",
+     "b": "a003",
+     "winner": "a006",
+     "loser": "a003",
+     "reason": "a003 still tells the user (\u00a73.2 point 4, \u00a73.5) that \u03bb changes the speed but not the partition on Iris, which I re-ran and found false (exemplars differ, identical(labels) is FALSE), so a false result is fed into the report plan. a006 corrected that finding and its line references check out. Its own slip, building on knitr inline chunks without saying that knitr is not installed, fails loudly and i",
+     "survived": [
+      "E2 false '\u03bb neutral' claim: fixed, now reports different exemplars and ARI between partitions",
+      "self-contradictory calendar for section 3 and the fiche: fixed with a single draft\u2192fiche\u2192slides\u2192finish order",
+      "section 8 had no deadline or fallback: fixed (transcript by 05, fallback on 06 at 18h, wc/grep checks)",
+      "TP had no completion check: fixed (R --vanilla run, seed, sessionInfo, capture-environment, dry run on 04)",
+      "formals(apcluster) returns an empty table: fixed with apcluster:::apcluster.matrix",
+      "R2 and k for r3 left undefined: fixed (r2 chunk; every distinct k from 2 to 15, table at k=9)",
+      "G1 git commit count wrong: fixed (5 commits, e9ab1b1, dea0014 as login)"
+     ],
+     "scores": {
+      "a006": 78.5,
+      "a003": 76.0
+     },
+     "source": "judge"
+    },
+    {
+     "id": "r1-m04",
+     "a": "a012",
+     "b": "a008",
+     "winner": "a012",
+     "loser": "a008",
+     "reason": "Both fixed every attack and their numbers reproduce (AP 147.62 / pam-D2 146.68 / pam-euclid 148.55, ARI 0.6311581, k=9 costs 59.69/59.04/61.90), but a012 makes the plan actually shareable with Marie (local-only sources flagged and summarised in Annexe B, analyse_litterature shared on 02/11) and schedules the teacher query plus a 09/11 gate so no '\u00c0 compl\u00e9ter' or folder-name guess reaches the grade",
+     "survived": [
+      "Marie cannot open local sources: fixed with (local) tags, Annexe B and a dated 02/11 share",
+      "pam dissimilarity unspecified: fixed with exact calls (pam on D2, kmeans nstart=25 + seed, ward.D2) and euclidean pam as sensitivity",
+      "broken 'Fini quand' greps: replaced by exhaustive number listing and sed-excluded \u00a77 check",
+      "fiche Moodle upload and blank folder name: added to E3/E6, 03/11 gate and teacher email",
+      "'\u00c0 compl\u00e9ter' printed on cover: evaluation removed, values requested 02/11, fields removed at 09/11 gate"
+     ],
+     "scores": {
+      "a012": 83.5,
+      "a008": 81.0
+     },
+     "source": "judge"
+    },
+    {
+     "id": "r1-m05",
+     "a": "a005",
+     "b": "a010",
+     "winner": "a005",
+     "loser": "a010",
+     "reason": "Both fixed every attack, but a010's calendar still has the slides written on their due day (04/11), an unspecified merge into main on 04/11 that would carry the draft report, and no Moodle posting of the fiche, while a005's only comparable gap is an undefined stability ARI rule.",
+     "survived": [
+      "k for the equal-k comparison never fixed / q=0 leakage (fixed: every distinct k from the q grid, k < n/2, check #10)",
+      "champ d'application missing (fixed: paragraph + done-criterion in part 1)",
+      "fiche and slides not scheduled, fiche Moodle diffusion missing (fixed: fiche Sun-Mon, posted Tue; slides Mon-Tue)",
+      "merging Rapport into main on 04/11 (fixed: release/oral with fiche/slides/tp/README only)",
+      "ich\u00e9it\u00e9 section conditional yet budgeted, transcription never requested (fixed: request on Sunday, budget with and without)"
+     ],
+     "scores": {
+      "a005": 84.5,
+      "a010": 80.5
+     },
+     "source": "judge"
+    },
+    {
+     "id": "r1-m06",
+     "a": "a002",
+     "b": "a013",
+     "winner": "a002",
+     "loser": "a013",
+     "reason": "Both fixed every attack, but a002 backs more of its audit with checks that reproduce (q = 0 is the off-diagonal minimum, the pam vs AP cost, the seed effect at q = 1, DOIs checked on Crossref/DataCite), handles the q = 0 leakage risk explicitly with pre-registration, flags the missing folder name in the cadrage, and tests a clean R install on 02/11, whereas a013 is tighter but thinner on verified ",
+     "survived": [
+      "q = 0 / k = 3 leakage: label-free justification (minimum of similarities, checked: -42.35), grid committed before ARI, all k compared",
+      "calendar putting the report before the oral: rebuilt, oral first, clean install tested on 02/11",
+      "Wine acquisition not scheduled: now on 02/11 with md5 + PROVENANCE",
+      "inconsistent owners: \u00a74.7 now the single source of truth, consistent with \u00a74.3/\u00a74.6",
+      "contradictory critique table: n\u00b0 7/11 split correctly",
+      "ch. 8 page budget: 1.5 p., total 16 p.",
+      "unsourced O(N\u00b3) claim: marked source A, not verified, to drop if not confirmed"
+     ],
+     "scores": {
+      "a002": 88.0,
+      "a013": 83.0
+     },
+     "source": "judge"
+    },
+    {
+     "id": "r1-m07",
+     "a": "a007",
+     "b": "a004",
+     "winner": "a007",
+     "loser": "a004",
+     "reason": "a007 fixed all seven attacks, and its revised plan has one code location (tp/00_config.R), traceable numbers through results.yml with {{< meta >}}, and a fair comparison scored on both SSE and p-median; a004 still uses the biased 'somme des dissimilarit\u00e9s aux repr\u00e9sentants' for K-means/Ward, copies numbers into the text by hand, and its cut list contradicts its own script schedule (\u03bb).",
+     "survived": [
+      "stability and \u03bb made optional: fixed, both now in the minimum deliverable",
+      "comparison criterion biased toward centroids: fixed with SSE + recomputed p-median for every method and pam(dist(x)^2)",
+      "two code locations: fixed, single tp/ with a shared 00_config.R and a grep check",
+      "no slot for slides/TP before 04/11: fixed, 03/11 for slides/TP with a fallback",
+      "probabilistic assumptions left unspecified: fixed, content given and MAP wording marked '\u00e0 v\u00e9rifier'",
+      "commit attribution wrong: fixed, 5 commits all by Marie and untracked files not attributed",
+      "minimum livrable contradicted itself on ich\u00e9it\u00e9: fixed"
+     ],
+     "scores": {
+      "a007": 86.0,
+      "a004": 78.5
+     },
+     "source": "judge"
+    },
+    {
+     "id": "r1-m08",
+     "a": "a009",
+     "b": "a011",
+     "winner": "a011",
+     "loser": "a009",
+     "reason": "Both fixed every attack, but a009 still makes stability (Q5) optional and the first thing cut, against the project rule, and it never fixes how k is chosen for the comparisons; a011 makes a minimal stability study mandatory, writes a k rule before any ARI is computed, and checks its DOIs and its apcluster seed trap (reproduced: identical(a,b) TRUE).",
+     "survived": [
+      "cadre_theorique.md line citations past the end of the file: fixed, re-checked lines 24/28/42/44/57/69",
+      "stability optional: fixed, mandatory minimal 5.5 plus checklist item",
+      "k of the comparisons undefined: fixed with a pre-registered q grid and every distinct k",
+      "analogy page budget: fixed to 1.5 p"
+     ],
+     "scores": {
+      "a009": 74.0,
+      "a011": 80.0
+     },
+     "source": "judge"
+    }
+   ],
+   "bye": null,
+   "closed": true
+  },
+  {
+   "n": 2,
+   "alive": [
+    "a002",
+    "a005",
+    "a006",
+    "a007",
+    "a011",
+    "a012",
+    "a015",
+    "a016"
+   ],
+   "matches": [
+    {
+     "id": "r2-m01",
+     "a": "a012",
+     "b": "a002",
+     "winner": "a012",
+     "loser": "a002",
+     "reason": "Both fixed every attack they received, but a002 still carries two errors a012 fixed: it reopens the Report/ folder name the user already decided (D1, mail to Blanchard) and still says to regenerate the apcluster defaults with formals(), which returns only s, x, ... on the S4 generic; it also hedges the fiche deadline ('sinon dans la matin\u00e9e').",
+     "survived": [
+      "k for Q3 chosen from labels (fixed: q = 0.5 and q = 0 rule, coincidence flagged)",
+      "reopening Report/ (fixed: settled, not in the teacher mail)",
+      "fiche/slides without owner or 10h deadline (fixed: Herv\u00e9, Tue before 10h)",
+      "formals() cannot read apcluster defaults (fixed: .local extraction with stopifnot)",
+      "default commits without a request (fixed: no commit by default)",
+      "\u00a77 500-word gate with no source (fixed: no-padding rule wins, with a note)"
+     ],
+     "scores": {
+      "a012": 85.0,
+      "a002": 75.5
+     },
+     "source": "judge"
+    },
+    {
+     "id": "r2-m02",
+     "a": "a005",
+     "b": "a015",
+     "winner": "a015",
+     "loser": "a005",
+     "reason": "Both fixed every attack, but a015 gives the user directly actionable material that a005 leaves to guesswork (tested URCA YAML block, numbered scripts with seed-checked control values, a tested awk number check, one decided home for the TP and a cherry-pick procedure for 04/11), which outweighs its own minor slips (the ich\u00e9it\u00e9 section can be dropped, and its stability ARI is computed against the fu",
+     "survived": [
+      "04/11 git route would carry partial report onto main: fixed with livrables/oral branch + cherry-pick + Report/ diff check",
+      "number-check regex missed integers: replaced by awk filter, verified to flag only line 54 on current .qmd",
+      "TP had two homes: decided git mv to tp/ on Application_Iris, Marie keeps authorship",
+      "control column could not fail: values re-run with both seeds, mismatch now blocking; stability sign flip disclosed and protocol moved to 10 seeds",
+      "Tuesday 03/11 overload: \u00a73 and script 05 moved after the oral, drop-order list added",
+      "D4 cited a line that names no folder: switched to root-level analyses/ with a valid reason"
+     ],
+     "scores": {
+      "a005": 80.5,
+      "a015": 82.0
+     },
+     "source": "judge"
+    },
+    {
+     "id": "r2-m03",
+     "a": "a006",
+     "b": "a007",
+     "winner": "a007",
+     "loser": "a006",
+     "reason": "a006 builds its whole pipeline on R chunks in the .qmd, but knitr and rmarkdown are not installed (the judge's render of an R chunk failed with 'The rmarkdown package is not available'), and it misses the template's uncaptioned-table crash ('No counter none', reproduced); a007 found and planned around both and fixed all five attacks against it.",
+     "survived": [
+      "results.yml missing on day 1: a one-line stub is now created in Chantier 0",
+      "md5 check broken by timings: timings moved to logs/, results.yml rewritten in full and checked",
+      "preference that sets k was unspecified: label-free q_main/q_low rule fixed in advance, both reported",
+      "TP tied to the report plumbing: TP is now self-contained, with a check script and a test from outside the repo",
+      "fiche distribution: promo, teachers and Moodle now stated"
+     ],
+     "scores": {
+      "a006": 69.0,
+      "a007": 85.0
+     },
+     "source": "judge"
+    },
+    {
+     "id": "r2-m04",
+     "a": "a011",
+     "b": "a016",
+     "winner": "a011",
+     "loser": "a016",
+     "reason": "Both fixed every attack, but a011 is more correct on unattacked points: it flags both determinism errors (methodologie.md:18 and :80), gives a fair equal-k stability design and catches the apcluster global-seed pitfall, and verifies the DOIs and the Wine licence externally; a016 still lets a stability comparison with varying k through, misses l.80, leaves the Wine licence unverified, calls the PDF",
+     "survived": [
+      "biased stability comparison (fixed: (a) fixed preference, (b) apclusterK at equal k)",
+      "no target branch on day 1 (fixed: Rapport as default, push without merge until Marie agrees)",
+      "no fallback before the oral (fixed: fallback table for 02-04/11)",
+      "\u03bb/stability numbers on slides before scripts exist (fixed: shown without numbers until 06/11)",
+      "determinism error left at methodologie.md:80 (fixed: both lines flagged)",
+      "unsupported claim about who wrote the untracked files (fixed: marked non v\u00e9rifi\u00e9)",
+      "fiche sent after the 48 h limit (fixed: sent 03/11 before 10h)"
+     ],
+     "scores": {
+      "a011": 85.0,
+      "a016": 80.5
+     },
+     "source": "judge"
+    }
+   ],
+   "bye": null,
+   "closed": true
+  },
+  {
+   "n": 3,
+   "alive": [
+    "a007",
+    "a011",
+    "a012",
+    "a015"
+   ],
+   "matches": [
+    {
+     "id": "r3-m01",
+     "a": "a011",
+     "b": "a012",
+     "winner": "a011",
+     "loser": "a012",
+     "reason": "a011 fixed all six attacks and now covers the whole guiding question: a compulsory similarity/standardisation sub-part, a compulsory minimal stability test, sourced content for the probabilistic hypotheses and a reproducible way to get Wine; a012 makes stability optional (against the project's sensitivity/stability rule), never tests similarity although the guiding question names it, leaves the pr",
+     "survived": [
+      "guiding question's similarity/standardisation half untested: fixed with compulsory sub-part 5.6 and a mapping table in \u00a7 4.4",
+      "probabilistic hypotheses item empty: fixed with three status-labelled answers, a candidate source (metadata checked) and a fallback",
+      "Rscript glob runs only the first file: fixed with analyses/run_all.R and a shell loop",
+      "aricode never installed: install step added as the first 02/11 task, plus a package check in 00_config.R and the README",
+      "no way to get Wine and the wine.txt trap not mentioned: fixed with a download plus SHA-256 check, data/raw/PROVENANCE.md and a grep check",
+      "small branches left unmerged: fixed, merged into Rapport straight away, with a 04/11 18:00 check using git branch --no-merged"
+     ],
+     "scores": {
+      "a011": 85.0,
+      "a012": 73.5
+     },
+     "source": "judge"
+    },
+    {
+     "id": "r3-m02",
+     "a": "a007",
+     "b": "a015",
+     "winner": "a015",
+     "loser": "a007",
+     "reason": "Both fixed every attack, but a015 also documents and guards against the apcluster(seed=) RNG-reset trap in resampling loops and gives a safe 04/11 delivery to main that excludes the partial report, whereas a007's stability script 04 (seed fixed, 20 subsamples) is exposed to the same unflagged RNG bug and its 04/11 'fusion dans main' would carry the unfinished report.",
+     "survived": [
+      "FATAL RNG bug in stability control (100 subsamples collapsing to 2): fixed, indices drawn before loop with uniqueness stopifnot, numbers rerun (verified 0.929/0.938 consistent with attacker)",
+      "Bug propagated into future scripts and coherence check: fixed, blocking exception in \u00a74.4 preamble and corrected expected values",
+      "04/11 procedure omitting README.md and untracked .gitignore: fixed, first git action plus path filter and ls-tree checks"
+     ],
+     "scores": {
+      "a007": 81.0,
+      "a015": 85.0
+     },
+     "source": "judge"
+    }
+   ],
+   "bye": null,
+   "closed": true
+  },
+  {
+   "n": 4,
+   "alive": [
+    "a011",
+    "a015"
+   ],
+   "matches": [
+    {
+     "id": "r4-m01",
+     "a": "a015",
+     "b": "a011",
+     "winner": "a015",
+     "loser": "a011",
+     "reason": "Both fixed every attack, but a015 gives tested, executable procedures for the two hardest deadlines (04/11 delivery to main without the partial report, and 10/11 final merge), while a011 leaves 'fusion des livrables valid\u00e9s dans main' on 04/11 and the 10/11 merge without any command, so the user could put the unfinished report on main; a015's own unflagged slips (README rewrite merged into Rapport",
+     "survived": [
+      "10/11 add/add merge conflict after cherry-pick: fixed with step 5 back-merge and \u00a76.3 procedure",
+      "fallback merging Rapport into main: replaced with rule-respecting fallbacks",
+      "number-check awk flagging math and citations: fixed and tested",
+      "missing tp/resultats_TP folder: fallback now reads resultats/ and is tested",
+      "contradictory dates: header and Jour 0 catch-up rule added"
+     ],
+     "scores": {
+      "a015": 82.0,
+      "a011": 78.0
+     },
+     "source": "judge"
+    }
+   ],
+   "bye": null,
+   "closed": true
+  }
+ ],
+ "champion": "a015",
+ "final": null
+}

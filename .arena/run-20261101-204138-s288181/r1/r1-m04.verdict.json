@@ -1,0 +1,20 @@
+{
+  "match": "r1-m04",
+  "scores": {
+    "a012": {"correctness": 8, "completeness": 9, "specificity": 8, "robustness": 9, "clarity": 7, "fatal": false},
+    "a008": {"correctness": 8, "completeness": 7, "specificity": 9, "robustness": 9, "clarity": 8, "fatal": false}
+  },
+  "winner": "a012",
+  "reason": "Both fixed every attack and their numbers reproduce (AP 147.62 / pam-D2 146.68 / pam-euclid 148.55, ARI 0.6311581, k=9 costs 59.69/59.04/61.90), but a012 makes the plan actually shareable with Marie (local-only sources flagged and summarised in Annexe B, analyse_litterature shared on 02/11) and schedules the teacher query plus a 09/11 gate so no 'À compléter' or folder-name guess reaches the graded PDF, whereas a008 cites git-ignored files Marie cannot open, keeps 'À compléter' on the title page with no step to obtain official values, and proposes an unsourced evaluation label.",
+  "survived": [
+    "Marie cannot open local sources: fixed with (local) tags, Annexe B and a dated 02/11 share",
+    "pam dissimilarity unspecified: fixed with exact calls (pam on D2, kmeans nstart=25 + seed, ward.D2) and euclidean pam as sensitivity",
+    "broken 'Fini quand' greps: replaced by exhaustive number listing and sed-excluded §7 check",
+    "fiche Moodle upload and blank folder name: added to E3/E6, 03/11 gate and teacher email",
+    "'À compléter' printed on cover: evaluation removed, values requested 02/11, fields removed at 09/11 gate"
+  ],
+  "standing": {
+    "a012": [],
+    "a008": []
+  }
+}

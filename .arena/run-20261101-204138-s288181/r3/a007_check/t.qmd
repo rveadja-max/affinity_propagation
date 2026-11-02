@@ -1,0 +1,29 @@
+---
+title: "Test"
+author: "X"
+documentclass: memoirerecherche
+lang: fr
+bibliography: bibliography.bib
+evaluation: "Rapport"
+diplome: "À compléter"
+anac: "2026-2027"
+module: "M"
+enseig: "E"
+git: "https://example.org"
+metadata-files: [results.yml]
+coefficient: "À compléter"
+format:
+  pdf:
+    template: template.tex
+    pdf-engine: xelatex
+    cite-method: biblatex
+---
+
+Texte [@frey2007clustering].
+
+| a | b |
+|---|---|
+| 1 | 2 |
+
+: Essai {#tbl-x}
+k = {{< meta res.s01.k_main >}}.
