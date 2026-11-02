@@ -1,0 +1,21 @@
+{
+  "match": "r2-m02",
+  "scores": {
+    "a005": {"correctness": 8, "completeness": 8, "specificity": 7, "robustness": 9, "clarity": 8, "fatal": false},
+    "a015": {"correctness": 7, "completeness": 9, "specificity": 9, "robustness": 9, "clarity": 7, "fatal": false}
+  },
+  "winner": "a015",
+  "reason": "Both fixed every attack, but a015 gives the user directly actionable material that a005 leaves to guesswork (tested URCA YAML block, numbered scripts with seed-checked control values, a tested awk number check, one decided home for the TP and a cherry-pick procedure for 04/11), which outweighs its own minor slips (the ichéité section can be dropped, and its stability ARI is computed against the full partition instead of between subsample pairs as methodologie.md:47 specifies).",
+  "survived": [
+    "04/11 git route would carry partial report onto main: fixed with livrables/oral branch + cherry-pick + Report/ diff check",
+    "number-check regex missed integers: replaced by awk filter, verified to flag only line 54 on current .qmd",
+    "TP had two homes: decided git mv to tp/ on Application_Iris, Marie keeps authorship",
+    "control column could not fail: values re-run with both seeds, mismatch now blocking; stability sign flip disclosed and protocol moved to 10 seeds",
+    "Tuesday 03/11 overload: §3 and script 05 moved after the oral, drop-order list added",
+    "D4 cited a line that names no folder: switched to root-level analyses/ with a valid reason"
+  ],
+  "standing": {
+    "a005": [],
+    "a015": []
+  }
+}

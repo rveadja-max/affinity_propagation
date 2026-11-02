@@ -1,0 +1,18 @@
+{
+  "match": "r3-m02",
+  "scores": {
+    "a007": {"correctness": 7, "completeness": 9, "specificity": 9, "robustness": 8, "clarity": 8, "fatal": false},
+    "a015": {"correctness": 8, "completeness": 9, "specificity": 9, "robustness": 9, "clarity": 7, "fatal": false}
+  },
+  "winner": "a015",
+  "reason": "Both fixed every attack, but a015 also documents and guards against the apcluster(seed=) RNG-reset trap in resampling loops and gives a safe 04/11 delivery to main that excludes the partial report, whereas a007's stability script 04 (seed fixed, 20 subsamples) is exposed to the same unflagged RNG bug and its 04/11 'fusion dans main' would carry the unfinished report.",
+  "survived": [
+    "FATAL RNG bug in stability control (100 subsamples collapsing to 2): fixed, indices drawn before loop with uniqueness stopifnot, numbers rerun (verified 0.929/0.938 consistent with attacker)",
+    "Bug propagated into future scripts and coherence check: fixed, blocking exception in §4.4 preamble and corrected expected values",
+    "04/11 procedure omitting README.md and untracked .gitignore: fixed, first git action plus path filter and ls-tree checks"
+  ],
+  "standing": {
+    "a007": [],
+    "a015": []
+  }
+}

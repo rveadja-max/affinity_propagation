@@ -1,0 +1,10 @@
+suppressMessages(library(apcluster))
+f <- selectMethod("apcluster", signature("matrix","missing")); print(formals(f@.Data)[c("p","q","maxits","convits","lam","nonoise","seed")])
+X <- scale(iris[,1:4])
+for(l in c(0.5,0.7,0.9)){a<-apcluster(negDistMat(r=2),X,lam=l,seed=1234); cat("lam",l,"k",length(a@exemplars),"it",a@it,"\n")}
+a<-apcluster(negDistMat(r=2),X,q=1); cat("q1 noseed k", length(a@exemplars),"\n")
+a<-apcluster(negDistMat(r=2),X,q=1,nonoise=TRUE); cat("q1 nonoise k", length(a@exemplars),"\n")
+a<-apcluster(negDistMat(r=2),X,lam=0.5,maxits=50,convits=10,seed=1); cat("lam.5 maxits50 k", length(a@exemplars),"it",a@it,"\n")
+a0<-apcluster(negDistMat(r=2),X,q=0,seed=1234); print(a0@exemplars)
+cl<-integer(150); for(i in seq_along(a0@clusters)) cl[a0@clusters[[i]]]<-i; print(table(cl,iris$Species))
+print(slotNames(a0))

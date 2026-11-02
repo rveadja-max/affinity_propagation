@@ -1,0 +1,11 @@
+{
+  "match": "r4-m01",
+  "scores": {
+    "a015": {"correctness": 7, "completeness": 9, "specificity": 9, "robustness": 9, "clarity": 7, "fatal": false},
+    "a011": {"correctness": 7, "completeness": 8, "specificity": 8, "robustness": 9, "clarity": 7, "fatal": false}
+  },
+  "winner": "a015",
+  "reason": "Both fixed every attack, but a015 gives tested, executable procedures for the two hardest deadlines (04/11 delivery to main without the partial report, and 10/11 final merge), while a011 leaves 'fusion des livrables validés dans main' on 04/11 and the 10/11 merge without any command, so the user could put the unfinished report on main; a015's own unflagged slips (README rewrite merged into Rapport without Marie's prior consent, dea0014 stated as Marie's account, comparisons anchored at q = 0 / k = 3) weigh less.",
+  "survived": ["10/11 add/add merge conflict after cherry-pick: fixed with step 5 back-merge and §6.3 procedure", "fallback merging Rapport into main: replaced with rule-respecting fallbacks", "number-check awk flagging math and citations: fixed and tested", "missing tp/resultats_TP folder: fallback now reads resultats/ and is tested", "contradictory dates: header and Jour 0 catch-up rule added"],
+  "standing": {"a015": [], "a011": []}
+}

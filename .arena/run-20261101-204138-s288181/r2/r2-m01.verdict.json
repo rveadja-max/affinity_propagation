@@ -1,0 +1,11 @@
+{
+  "match": "r2-m01",
+  "scores": {
+    "a012": {"correctness": 8, "completeness": 9, "specificity": 9, "robustness": 9, "clarity": 7, "fatal": false},
+    "a002": {"correctness": 6, "completeness": 9, "specificity": 8, "robustness": 8, "clarity": 7, "fatal": false}
+  },
+  "winner": "a012",
+  "reason": "Both fixed every attack they received, but a002 still carries two errors a012 fixed: it reopens the Report/ folder name the user already decided (D1, mail to Blanchard) and still says to regenerate the apcluster defaults with formals(), which returns only s, x, ... on the S4 generic; it also hedges the fiche deadline ('sinon dans la matinée').",
+  "survived": ["k for Q3 chosen from labels (fixed: q = 0.5 and q = 0 rule, coincidence flagged)", "reopening Report/ (fixed: settled, not in the teacher mail)", "fiche/slides without owner or 10h deadline (fixed: Hervé, Tue before 10h)", "formals() cannot read apcluster defaults (fixed: .local extraction with stopifnot)", "default commits without a request (fixed: no commit by default)", "§7 500-word gate with no source (fixed: no-padding rule wins, with a note)"],
+  "standing": {"a012": ["unattacked minor: secondary figure over every grid k still includes k = 149-150, where pam/kmeans fail"], "a002": ["unattacked: Report/ name reopened via D1 and the 01/11 mail", "unattacked: defaults table 'régénéré depuis formals()' does not work for the S4 generic", "unattacked: fiche deadline hedged as 'avant 10h si H3 confirmée ; sinon dans la matinée'"]}
+}

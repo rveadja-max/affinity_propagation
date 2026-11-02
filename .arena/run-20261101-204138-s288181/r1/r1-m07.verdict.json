@@ -1,0 +1,22 @@
+{
+  "match": "r1-m07",
+  "scores": {
+    "a007": {"correctness": 8, "completeness": 9, "specificity": 9, "robustness": 9, "clarity": 8, "fatal": false},
+    "a004": {"correctness": 7, "completeness": 9, "specificity": 8, "robustness": 8, "clarity": 7, "fatal": false}
+  },
+  "winner": "a007",
+  "reason": "a007 fixed all seven attacks, and its revised plan has one code location (tp/00_config.R), traceable numbers through results.yml with {{< meta >}}, and a fair comparison scored on both SSE and p-median; a004 still uses the biased 'somme des dissimilarités aux représentants' for K-means/Ward, copies numbers into the text by hand, and its cut list contradicts its own script schedule (λ).",
+  "survived": [
+    "stability and λ made optional: fixed, both now in the minimum deliverable",
+    "comparison criterion biased toward centroids: fixed with SSE + recomputed p-median for every method and pam(dist(x)^2)",
+    "two code locations: fixed, single tp/ with a shared 00_config.R and a grep check",
+    "no slot for slides/TP before 04/11: fixed, 03/11 for slides/TP with a fallback",
+    "probabilistic assumptions left unspecified: fixed, content given and MAP wording marked 'à vérifier'",
+    "commit attribution wrong: fixed, 5 commits all by Marie and untracked files not attributed",
+    "minimum livrable contradicted itself on ichéité: fixed"
+  ],
+  "standing": {
+    "a007": [],
+    "a004": []
+  }
+}

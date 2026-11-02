@@ -1,0 +1,324 @@
+% =============================================================================
+% Template Pandoc LaTeX pour la classe memoirerecherche
+% Utilisé par bookdown::pdf_book via rapport.Rmd
+% =============================================================================
+
+% Pré-déclarer l'option [table] pour xcolor AVANT le chargement de la classe.
+% memoirerecherche.cls fait \RequirePackage[table]{xcolor} ; si kableExtra
+% (ou un autre paquet) tente ensuite \usepackage{xcolor}, LaTeX peut
+% signaler un « Option clash for package xcolor ». La ligne suivante
+% garantit la compatibilité dans tous les cas.
+\PassOptionsToPackage{table}{xcolor}
+
+\documentclass[11pt,a4paper]{memoirerecherche}
+
+% --- Géométrie ----------------------------------------------------------------
+
+% --- Encodage et polices (XeLaTeX) --------------------------------------------
+\usepackage{fontspec}
+\defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+
+% --- Langue -------------------------------------------------------------------
+\usepackage[french]{babel}
+\usepackage{csquotes}
+
+% --- Mathématiques ------------------------------------------------------------
+\usepackage{amsmath,amssymb}
+
+% --- Tableaux et flottants ----------------------------------------------------
+% Note : graphicx, xcolor, colortbl, hyperref, caption déjà chargés par memoirerecherche.cls
+\usepackage{longtable}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{calc}   % Requis par Pandoc ≥ 3.x pour \real{} dans les largeurs de colonnes
+\usepackage{multirow}
+\usepackage{float}
+
+% --- Graphiques (maxwidth/maxheight pour Pandoc) -------------------------------
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+
+% --- Listes -------------------------------------------------------------------
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+% --- Configuration hyperref (package déjà chargé par la classe) ---------------
+\hypersetup{
+  pdftitle={L'algorithme Affinity Propagation},
+  colorlinks=true,
+  linkcolor=urcabrown,
+  citecolor=urcabrown,
+  urlcolor=urcalightbrown,
+  breaklinks=true
+}
+\urlstyle{same}
+
+% --- En-têtes / pieds de page -------------------------------------------------
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\leftmark}
+\fancyhead[R]{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+% --- Bibliographie (biblatex) -------------------------------------------------
+\usepackage[]{biblatex}
+\addbibresource{bibliography.bib}
+
+% --- Comptage automatique des références bibliographiques ---------------------
+% Le compteur citnum (défini dans memoirerecherche.cls) est incrémenté pour
+% chaque entrée imprimée dans la bibliographie ; \total{citnum} sur la page
+% de titre affichera la valeur finale (disponible dès le second passage LaTeX).
+\newcounter{citnum}
+\AtEveryBibitem{\stepcounter{citnum}}
+
+% --- Coloration syntaxique Pandoc ---------------------------------------------
+% Pré-définir l'environnement Shaded (requis par les macros de coloration
+% Pandoc qui utilisent \renewenvironment) et la couleur shadecolor.
+\usepackage{tcolorbox}
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+
+% --- Header-includes depuis le YAML -------------------------------------------
+\makeatletter
+\@ifpackageloaded{caption}{}{\usepackage{caption}}
+\AtBeginDocument{%
+\ifdefined\contentsname
+  \renewcommand*\contentsname{Table des matières}
+\else
+  \newcommand\contentsname{Table des matières}
+\fi
+\ifdefined\listfigurename
+  \renewcommand*\listfigurename{Liste des Figures}
+\else
+  \newcommand\listfigurename{Liste des Figures}
+\fi
+\ifdefined\listtablename
+  \renewcommand*\listtablename{Liste des Tables}
+\else
+  \newcommand\listtablename{Liste des Tables}
+\fi
+\ifdefined\figurename
+  \renewcommand*\figurename{Figure}
+\else
+  \newcommand\figurename{Figure}
+\fi
+\ifdefined\tablename
+  \renewcommand*\tablename{Table}
+\else
+  \newcommand\tablename{Table}
+\fi
+}
+\@ifpackageloaded{float}{}{\usepackage{float}}
+\floatstyle{ruled}
+\@ifundefined{c@chapter}{\newfloat{codelisting}{h}{lop}}{\newfloat{codelisting}{h}{lop}[chapter]}
+\floatname{codelisting}{Listing}
+\newcommand*\listoflistings{\listof{codelisting}{Liste des Listings}}
+\makeatother
+\makeatletter
+\makeatother
+\makeatletter
+\@ifpackageloaded{caption}{}{\usepackage{caption}}
+\@ifpackageloaded{subcaption}{}{\usepackage{subcaption}}
+\makeatother
+
+% --- Variables personnalisées → commandes memoirerecherche.cls ----------------
+\diplome{À compléter}
+\module{Apprentissage non supervisé}
+\enseig{Frédéric Blanchard, Philippe Regnault}
+\evaluation{Rapport de projet}
+\coefficient{À compléter}
+\anac{2026-2027}
+
+% Résumé
+\resume{}
+
+% Mots-clés
+\keywords{}
+
+% Dépôt Git et base de données
+\gitrepo{https://gitlab-mi.univ-reims.fr/dea0014/affinity\_propagation}
+\database{}
+
+% Logo de la page de titre
+\logo{logoSESGURCA.jpg}
+
+% Métriques de la page de titre — comptage automatique
+% Les compteurs figure, table et citnum sont gérés automatiquement par
+% totcount (voir memoirerecherche.cls). Les lignes ci-dessous ne sont
+% conservées que pour ne pas casser un éventuel code qui référencerait
+% \@totfig, \@tottab, etc.
+\totfig{--}\tottab{--}\totref{--}\tottheo{0}
+
+% --- Titre, auteur, date ------------------------------------------------------
+\title{L'algorithme Affinity Propagation}
+% N.B. : ne PAS utiliser \and ici — la classe memoirerecherche.cls affiche
+% \@author dans un minipage/tabular ; or, \and est défini par article.cls
+% comme \end{tabular}\begin{tabular}, ce qui casse l'imbrication de tables
+% du \maketitle de la classe et provoque « ! Missing } inserted. ».
+\author{Hervé ADJAKOSSA \& Marie DE AMORIM PEREIRA DA SILVA}
+\date{2026-11-05}
+
+% =============================================================================
+\begin{document}
+
+\maketitle
+\newpage
+
+% --- Table des matières -------------------------------------------------------
+{
+\setcounter{tocdepth}{3}
+\tableofcontents
+\newpage
+}
+
+% --- Liste des tables ---------------------------------------------------------
+
+% --- Liste des figures --------------------------------------------------------
+
+% --- Corps du document --------------------------------------------------------
+\newpage
+
+\section{INTRODUCTION}\label{introduction}
+
+Dans le cadre de la matière apprentissage non supervisé, enseignée par
+Monsieur Frédéric BLANCHARD et Monsieur Philippe REGNAULT, nous étudions
+l'algorithme ``Affinity Propagation''.
+
+Pour commencer, il semble important d'établir une première distinction
+entre l'apprentissage supervisé et non supervisé. L'apprentissage
+non-supervisé, aussi appelé apprentissage automatique, consiste à
+utiliser des algorithmes pour apprendre des structures, des relations ou
+des règles à partir de données. Au lieu de programmer manuellement
+toutes les règles que l'ordinateur doit suivre, on lui fournit des
+données et une méthode qui lui permet d'en extraire certaines
+informations. L'apprentissage supervisé en revenche, consiste à utiliser
+des algorithmes pour apprendre des relations entre des données et des
+résultats connus, afin de prédire ces résultats pour de nouvelles
+observations. La différence majeure réside donc dans la connaissance (ou
+non) du résultat à prédire sur les données d'entraînement. Ce projet
+s'inscrit donc dans une démarche d'apprentissage non-supervisé.
+
+Le terme d'algorithme a été mentionné à plusieurs reprises, il nous
+semble donc important de commencer par le définir. Un algorithme est un
+processus systématique de résolution d'un problème. Un algorithme
+d'apprentissage automatique est plus élaboré : il utilise les données
+pour construire une solution à un problème donné. Il existe de
+nombreuses méthodes, car tous les problèmes ne se ressemblent pas.
+Certaines méthodes cherchent à prédire une valeur, d'autres à classer
+des observations, d'autres encore à découvrir des groupes ou des
+relations cachées dans les données.
+
+Nous nous intéresserons donc, dans ce rapport, à l'algorithme ``Affinity
+Propagation''. Notre travail permettra donc notamment de comprendre le
+but de cet algorithme, le comparer à d'autres algorithmes ayant un but
+similaire afin d'identifier les situations les plus propices à son
+utilisation, puis de comprendre les fondements mathématiques
+sous-jacents. Finalement, nous préciserons une implémentation existante
+sour R avant de mettre en place une application permettant de se
+familiariser avec Affinity Propagation.
+
+\newpage
+
+\section{I. POSITIONNEMENT DE L'ALGORITHME AFFINITY PROPAGATION DANS
+L'APPRENTISSAGE
+AUTOMATIQUE}\label{i.-positionnement-de-lalgorithme-affinity-propagation-dans-lapprentissage-automatique}
+
+\subsection{A. La classification non supervisée : le
+clustering}\label{a.-la-classification-non-supervisuxe9e-le-clustering}
+
+L'apprentissage non supervisé regroupe plusieurs familles de méthodes
+ayant pour objectif d'extraire des informations à partir de données non
+étiquetées. Parmi celles-ci, le \emph{clustering}, également appelé
+classification non supervisée, consiste à répartir les observations d'un
+jeu de données en plusieurs groupes, appelés clusters.
+
+L'objectif est de réunir au sein d'un même groupe les observations
+présentant des caractéristiques similaires, tout en distinguant autant
+que possible les observations appartenant à des groupes différents.
+Contrairement à la classification supervisée, les groupes ne sont pas
+définis à l'avance. L'algorithme doit donc identifier lui-même une
+organisation pertinente des données, à partir des informations dont il
+dispose.
+
+Le clustering peut répondre à différents objectifs, notamment identifier
+des profils similaires au sein d'une population, regrouper des individus
+présentant des caractéristiques communes ou encore découvrir des
+structures dans des données complexes.
+
+Il existe cependant plusieurs manières de construire ces groupes. Les
+méthodes de clustering se distinguent notamment par la façon dont elles
+mesurent les ressemblances entre observations et par les règles
+utilisées pour former les groupes.
+
+\subsection{B. Les principales familles de méthodes de
+clustering}\label{b.-les-principales-familles-de-muxe9thodes-de-clustering}
+
+Il existe différentes approches pour réaliser une classification non
+supervisée. Parmi les plus connues, on peut notamment distinguer les
+méthodes de partitionnement, les méthodes hiérarchiques et les méthodes
+fondées sur la densité.
+
+Concernant les méthodes de partitionnement,elles cherchent à répartir
+directement les observations en un nombre déterminé de groupes.
+L'algorithme K-means en est un exemple classique. Il consiste à
+attribuer chaque observation au centre de groupe le plus proche, puis à
+actualiser ces centres jusqu'à obtenir une certaine stabilité. Cette
+approche nécessite généralement de définir le nombre de groupes souhaité
+avant de lancer l'algorithme. On verra donc qu'Affinity Propagation est
+un algorithme particulier de cette famille.
+
+Les méthodes hiérarchiques quant à elles construisent une organisation
+des observations sous la forme d'une hiérarchie de groupes. Dans une
+approche ascendante, chaque observation constitue initialement un groupe
+individuel, puis les groupes les plus proches sont progressivement
+fusionnés. Les résultats peuvent être représentés à l'aide d'un
+dendrogramme, qui permet de visualiser les différentes étapes de
+regroupement.
+
+Finalement, les méthodes fondées sur la densité cherchent à identifier
+des zones dans lesquelles les observations sont particulièrement
+concentrées. DBSCAN (Density-Based Spatial Clustering of Applications
+with Noise) est un exemple de cette famille. Il permet notamment
+d'identifier des groupes de formes variées et de distinguer les
+observations considérées comme du bruit.
+
+Ces différentes approches reposent sur des principes distincts et
+présentent chacune des avantages et des limites selon la structure des
+données étudiées.
+
+\subsection{C. La place de l'Affinity
+Propagation}\label{c.-la-place-de-laffinity-propagation}
+
+L'algorithme Affinity Propagation, proposé par Brendan J. Frey et
+Delbert Dueck en 2007 \autocite{frey2007clustering}, constitue une
+approche particulière du clustering.
+
+Contrairement à K-means, il ne nécessite pas de fixer directement le
+nombre de groupes avant l'exécution de l'algorithme. Il repose sur les
+similarités entre les observations et cherche à identifier des
+observations représentatives, appelées ``exemplars'', qui serviront de
+représentants aux différents groupes. Chaque observation est ensuite
+associée à l'un de ces exemplaires, ce qui permet de constituer les
+clusters.
+
+Le fonctionnement de l'algorithme repose sur des échanges itératifs de
+messages entre les observations. Ces messages permettent progressivement
+de déterminer quelles observations sont les plus pertinentes pour
+représenter les groupes.
+
+L'Affinity Propagation se distingue ainsi par son principe de sélection
+des représentants : plutôt que de construire des centres artificiels,
+comme dans K-means, il sélectionne des observations réellement présentes
+dans le jeu de données. Cette particularité constitue l'un des éléments
+centraux de son fonctionnement et sera étudiée plus en détail dans les
+parties suivantes.
+
+% --- Bibliographie ------------------------------------------------------------
+\printbibliography[heading=bibintoc,title={Bibliographie}]
+
+\end{document}

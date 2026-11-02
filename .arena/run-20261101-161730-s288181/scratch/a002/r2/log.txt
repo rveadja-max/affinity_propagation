@@ -1,0 +1,68 @@
+[1mpandoc [22m
+  to: latex
+  output-file: Affinity_propagation_rapport.tex
+  template: template.tex
+  standalone: true
+  pdf-engine: xelatex
+  variables:
+    graphics: true
+    tables: true
+  default-image-extension: pdf
+  cite-method: biblatex
+  toc: true
+  number-sections: true
+  
+[1mmetadata[22m
+  block-headings: true
+  title: L'algorithme Affinity Propagation
+  subtitle: Apprentissage non supervisé
+  author: Hervé ADJAKOSSA & Marie DE AMORIM PEREIRA DA SILVA
+  date: 10 novembre 2026
+  lang: fr
+  evaluation: Rapport de projet
+  diplome: À compléter
+  anac: 2026-2027
+  module: Apprentissage non supervisé
+  enseig: Frédéric Blanchard, Philippe Regnault
+  coefficient: À compléter
+  git: https://gitlab-mi.univ-reims.fr/dea0014/affinity_propagation
+  bibliography:
+    - bibliography.bib
+  documentclass: memoirerecherche
+  
+[1m[34m
+Rendering PDF[39m[22m
+[1m[34mrunning xelatex - 1[39m[22m
+  This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex)
+   restricted \write18 enabled.
+  entering extended mode
+  
+[1m[34mgenerating bibliography[39m[22m
+  INFO - This is Biber 2.22
+  INFO - Logfile is 'Affinity_propagation_rapport.blg'
+  INFO - Reading 'Affinity_propagation_rapport.bcf'
+  INFO - Found 1 citekeys in bib section 0
+  INFO - Processing section 0
+  INFO - Looking for bibtex file 'bibliography.bib' for section 0
+  INFO - LaTeX decoding ...
+  INFO - Found BibTeX data source 'bibliography.bib'
+  INFO - Overriding locale 'fr-FR' defaults 'variable = shifted' with 'variable = non-ignorable'
+  INFO - Overriding locale 'fr-FR' defaults 'normalization = NFD' with 'normalization = prenormalized'
+  INFO - Sorting list 'nty/global//global/global/global' of type 'entry' with template 'nty' and locale 'fr-FR'
+  INFO - No sort tailoring available for locale 'fr-FR'
+  INFO - Writing 'Affinity_propagation_rapport.bbl' with encoding 'UTF-8'
+  INFO - Output to Affinity_propagation_rapport.bbl
+  
+[1m[34mrunning xelatex - 2[39m[22m
+  This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex)
+   restricted \write18 enabled.
+  entering extended mode
+  
+[1m[34mrunning xelatex - 3[39m[22m
+  This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex)
+   restricted \write18 enabled.
+  entering extended mode
+  
+
+Output created: Affinity_propagation_rapport.pdf
+

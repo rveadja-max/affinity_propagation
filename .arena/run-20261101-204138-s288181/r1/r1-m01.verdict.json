@@ -1,0 +1,21 @@
+{
+  "match": "r1-m01",
+  "scores": {
+    "a016": {"correctness": 8, "completeness": 9, "specificity": 9, "robustness": 9, "clarity": 8, "fatal": false},
+    "a001": {"correctness": 7, "completeness": 8, "specificity": 8, "robustness": 9, "clarity": 8, "fatal": false}
+  },
+  "winner": "a016",
+  "reason": "Both fixed every attack, but a001's plan relies on knitr chunks and inline `r` values (plus NMI) without ever planning to install knitr/rmarkdown or update the README, and it has no strategy for two people editing one .qmd; I confirmed knitr, rmarkdown and aricode are absent. a016 covers dependencies, the README, per-chapter include files with a merge order, and a fiche with an owner and a Moodle deposit.",
+  "survived": [
+    "same-day edits of one .qmd: fixed with D9 per-chapter includes and a merge order",
+    "fiche had no owner or Moodle deposit: fixed (Marie on 02/11, deposited before 03/11 noon)",
+    "README not updated for new packages: fixed in the 02/11 lot",
+    "dea0014 left unverified and Hervé's GitLab identity: fixed and checked",
+    "summary listed D1-D6 only: fixed to D1-D9",
+    "author \\and justification wrong: fixed, Marie's & kept"
+  ],
+  "standing": {
+    "a016": ["(found by judge, minor) the ichéité grep confinement check conflicts with the intro's plan announcement naming ch. 7"],
+    "a001": ["(found by judge) no install of knitr/rmarkdown and no README update, although the report depends on chunks and inline r", "(found by judge) no merge or ownership strategy for two people editing the single .qmd"]
+  }
+}

@@ -1,0 +1,32 @@
+---
+title: "L'algorithme Affinity Propagation"
+author: "Hervé ADJAKOSSA & Marie DE AMORIM PEREIRA DA SILVA"
+date: "10 novembre 2026"
+lang: fr
+format:
+  pdf:
+    documentclass: memoirerecherche
+    template: template.tex
+    pdf-engine: xelatex
+    cite-method: biblatex
+    toc: true
+    number-sections: true
+bibliography: bibliography.bib
+evaluation: "Rapport"
+module: "Apprentissage non supervisé"
+enseig: "Frédéric Blanchard, Philippe Regnault"
+anac: "2026-2027"
+diplome: "À compléter"
+coefficient: "À compléter"
+git: "https://gitlab-mi.univ-reims.fr/dea0014/affinity_propagation"
+---
+
+# Introduction {.unnumbered}
+
+Test de citation [@frey2007clustering] et [@bodenhofer2011apcluster].
+
+# Positionnement
+
+Texte.
+
+{{< include chapitres/_03_fondements.qmd >}}

@@ -1,0 +1,22 @@
+{
+  "match": "r1-m06",
+  "scores": {
+    "a002": {"correctness": 9, "completeness": 9, "specificity": 9, "robustness": 9, "clarity": 7, "fatal": false},
+    "a013": {"correctness": 8, "completeness": 8, "specificity": 8, "robustness": 9, "clarity": 9, "fatal": false}
+  },
+  "winner": "a002",
+  "reason": "Both fixed every attack, but a002 backs more of its audit with checks that reproduce (q = 0 is the off-diagonal minimum, the pam vs AP cost, the seed effect at q = 1, DOIs checked on Crossref/DataCite), handles the q = 0 leakage risk explicitly with pre-registration, flags the missing folder name in the cadrage, and tests a clean R install on 02/11, whereas a013 is tighter but thinner on verified evidence and leaves the clean-install test to the morning of 04/11.",
+  "survived": [
+    "q = 0 / k = 3 leakage: label-free justification (minimum of similarities, checked: -42.35), grid committed before ARI, all k compared",
+    "calendar putting the report before the oral: rebuilt, oral first, clean install tested on 02/11",
+    "Wine acquisition not scheduled: now on 02/11 with md5 + PROVENANCE",
+    "inconsistent owners: §4.7 now the single source of truth, consistent with §4.3/§4.6",
+    "contradictory critique table: n° 7/11 split correctly",
+    "ch. 8 page budget: 1.5 p., total 16 p.",
+    "unsourced O(N³) claim: marked source A, not verified, to drop if not confirmed"
+  ],
+  "standing": {
+    "a002": [],
+    "a013": []
+  }
+}
