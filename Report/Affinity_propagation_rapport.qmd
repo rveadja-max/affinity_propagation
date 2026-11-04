@@ -58,3 +58,108 @@ Contrairement à K-means, il ne nécessite pas de fixer directement le nombre de
 Le fonctionnement de l'algorithme repose sur des échanges itératifs de messages entre les observations. Ces messages permettent progressivement de déterminer quelles observations sont les plus pertinentes pour représenter les groupes.
 
 L'Affinity Propagation se distingue ainsi par son principe de sélection des représentants : plutôt que de construire des centres artificiels, comme dans K-means, il sélectionne des observations réellement présentes dans le jeu de données. Cette particularité constitue l'un des éléments centraux de son fonctionnement et sera étudiée plus en détail dans les parties suivantes.
+
+\newpage
+
+# III. IMPLEMENTATION EXISTANTE EN R ET EN PYTHON
+
+L'algorithme Affinity Propagation est aujourd'hui disponible dans les deux environnements les plus utilisés en science des données : en R à travers le package `apcluster` [@bodenhofer2011apcluster; @bodenhofer2025apcluster], et en Python où il est directement intégré à la librairie scikit-learn [@pedregosa2011scikit]. Nous présentons ici ces deux implémentations, leurs fonctions principales et leurs paramètres, avant de dégager les points de comparaison qui guideront notre application sur le jeu de données Iris.
+
+## A. Le package R `apcluster`
+
+### Présentation générale
+
+Le package `apcluster`, développé par Ulrich Bodenhofer et ses collaborateurs, est la principale implémentation d'Affinity Propagation sous R. Il est disponible sur le CRAN (nous utilisons la version 1.4.14) et s'installe simplement par `install.packages("apcluster")`. Son article de référence est publié dans la revue *Bioinformatics* [@bodenhofer2011apcluster], le package ayant initialement été conçu pour des applications en bioinformatique, notamment l'analyse de données d'expression génique.
+
+Deux choix de conception distinguent ce package d'une simple transcription de l'algorithme. D'une part, son cœur algorithmique est largement analogue au code Matlab publié par Frey et Dueck [@frey2007clustering], ce qui garantit la fidélité à l'algorithme original. D'autre part, le package s'appuie sur la programmation orientée objet S4 de R : les résultats sont renvoyés sous forme d'objets structurés, assortis de méthodes d'affichage (`show`), de représentation graphique (`plot`, `heatmap`) et d'extraction (`labels`, `cutree`), ce qui en fait un outil complet d'analyse et pas seulement une fonction de calcul.
+
+### Fonctions de similarité
+
+Comme l'algorithme opère sur une matrice de similarités et non directement sur les données, le package fournit plusieurs fonctions pour construire cette matrice à partir des observations :
+
+- `negDistMat(x, r)` : similarité définie comme l'opposé d'une distance entre observations. Avec `r = 2`, on obtient l'opposé de la distance euclidienne au carré, c'est-à-dire la similarité utilisée dans l'article original [@frey2007clustering] ; c'est le choix que nous retiendrons dans notre application.
+- `expSimMat(x, r, w)` : similarité exponentielle de la forme $\exp(-(d/w)^r)$, où $d$ est la distance entre deux observations.
+- `linSimMat(x, w)` : similarité linéaire, tronquée à zéro au-delà d'un seuil de distance $w$.
+- `corSimMat(x, r)` : similarité fondée sur le coefficient de corrélation entre observations.
+
+Ces fonctions peuvent soit être appelées directement pour produire la matrice de similarités, soit être passées en argument à la fonction de clustering qui calcule alors la matrice en interne.
+
+### La fonction principale `apcluster()`
+
+La fonction centrale du package est `apcluster()`, qui admet deux modes d'appel équivalents : soit en lui fournissant une matrice de similarités précalculée, par exemple `apcluster(s, x)` où `s` est une matrice carrée ; soit en lui fournissant une fonction de similarité et les données, par exemple `apcluster(negDistMat(r = 2), x)`, auquel cas la matrice est calculée automatiquement. Elle accepte également des matrices creuses (*sparse*), utiles pour les grands jeux de données.
+
+Ses principaux paramètres sont les suivants :
+
+- `p` : la **préférence** des observations, c'est-à-dire la valeur diagonale $s(k,k)$ de la matrice de similarités. Elle contrôle la propension de chaque observation à devenir exemplaire : plus `p` est élevé, plus le nombre de clusters obtenus est important. Il peut s'agir d'une valeur unique commune à toutes les observations ou d'un vecteur de préférences individuelles. Si `p = NA` (défaut), la préférence est initialisée automatiquement à partir de la distribution des similarités, selon le paramètre `q`.
+- `q` : le **quantile** utilisé pour l'initialisation automatique de la préférence. Par défaut (`q = NA`), la préférence est fixée à la médiane des similarités, ce qui conduit à un nombre modéré de clusters ; une valeur de `q` entre 0 et 1 permet d'utiliser un autre quantile (par exemple `q = 0` pour le minimum des similarités, qui produit peu de clusters).
+- `lam` : le facteur d'**amortissement** (*damping factor*), compris dans $[0{,}5 ; 1[$. Ce sont les messages échangés (responsabilités et disponibilités) qui sont amortis, afin d'éviter les oscillations numériques : à chaque itération, la nouvelle valeur d'un message est une moyenne pondérée entre sa valeur précédente (poids `lam`) et sa valeur nouvellement calculée (poids `1 - lam`). La valeur par défaut est 0,9 ; des valeurs plus élevées amortissent davantage mais ralentissent la convergence.
+- `maxits` : le nombre maximal d'itérations (1000 par défaut).
+- `convits` : le critère d'arrêt. L'algorithme s'arrête si l'ensemble des exemplaires n'a pas changé pendant `convits` itérations consécutives (100 par défaut).
+- `seed` : la graine du générateur aléatoire. En effet, comme dans le code original de Frey et Dueck, un très faible bruit aléatoire est ajouté aux similarités pour lever les égalités exactes qui pourraient conduire à des cas dégénérés ; fixer `seed` garantit la reproductibilité des résultats. Ce bruit peut être désactivé avec `nonoise = TRUE`.
+- `includeSim` et `details` : des options contrôlant la quantité d'informations conservées dans l'objet résultat (la matrice de similarités, respectivement le détail itération par itération de la progression de l'algorithme).
+
+### L'objet résultat et les outils d'inspection
+
+La fonction `apcluster()` renvoie un objet S4 de classe `APResult`, qui conserve notamment : le nombre d'itérations effectuées, la préférence effectivement utilisée, la liste des clusters (chacun étant représenté par son exemplaire, identifié par son indice dans le jeu de données), ainsi que la valeur finale de la fonction objectif, appelée *net similarity*, décomposée en somme des similarités des observations à leur exemplaire (`dpsim`) et somme des préférences des exemplaires retenus (`expref`).
+
+Plusieurs méthodes permettent d'exploiter cet objet : `plot()` appliqué au résultat trace l'évolution de la *net similarity* au fil des itérations, ce qui permet de vérifier la convergence ; appliqué conjointement aux données, il représente graphiquement les clusters et leurs exemplaires. La méthode `heatmap()` produit une carte de chaleur de la matrice de similarités réordonnée par cluster, utile pour évaluer visuellement la cohérence des groupes.
+
+### Fonctions auxiliaires : contrôle du nombre de clusters, grands jeux de données et fusion
+
+Au-delà de l'algorithme de base, le package propose trois extensions directement utiles en pratique [@bodenhofer2011apcluster] :
+
+- `preferenceRange(s)` détermine une plage de valeurs pertinentes pour la préférence : une borne basse (qui conduirait à un ou deux clusters) et une borne haute (qui conduirait à autant de clusters que d'observations). Cette fonction aide à choisir `p` de manière éclairée plutôt qu'aveuglément.
+- `apclusterK(s, x, K)` exécute l'algorithme en ajustant itérativement la préférence (par recherche dichotomique dans la plage fournie par `preferenceRange()`) afin d'obtenir un nombre de clusters proche d'une valeur cible `K` fixée par l'utilisateur. Cela permet de ramener Affinity Propagation à un usage comparable à K-means lorsque le nombre de groupes est imposé, tout en conservant des exemplaires réels comme représentants.
+- `apclusterL()` implémente la *leveraged affinity propagation*, une variante pour les jeux de données volumineux : l'algorithme n'est exécuté que sur des sous-échantillons tirés aléatoirement (paramètres `frac` pour la fraction d'observations et `sweeps` pour le nombre de répétitions), ce qui évite le calcul de la matrice de similarités complète, coûteuse en mémoire.
+- `aggExCluster()` réalise un clustering agglomératif **fondé sur les exemplaires** : contrairement aux méthodes hiérarchiques classiques, chaque fusion de deux clusters s'accompagne de la sélection d'un nouvel exemplaire pour le cluster fusionné. Appliquée au résultat d'`apcluster()`, cette fonction permet de **fusionner progressivement des clusters jugés trop nombreux**, et de représenter le résultat sous forme de dendrogramme, dont on peut extraire une partition à K groupes avec `cutree()`. Nous mobiliserons cette possibilité dans l'application pour rapprocher Affinity Propagation d'une partition en trois groupes comparable aux trois espèces d'iris.
+
+## B. L'implémentation dans scikit-learn (Python)
+
+### Présentation générale
+
+En Python, l'algorithme est implémenté directement dans scikit-learn [@pedregosa2011scikit], la librairie de référence pour l'apprentissage automatique dans cet environnement (nous utilisons la version 1.9.1, installée par `pip install scikit-learn`). Aucune installation supplémentaire n'est donc nécessaire. L'implémentation est accessible dans le module `sklearn.cluster` sous deux formes complémentaires, comme c'est l'usage dans cette librairie : une **classe estimateur**, `AffinityPropagation`, conforme à l'interface standard de scikit-learn (méthodes `fit`, `predict`, `fit_predict`), et une **fonction** de plus bas niveau, `affinity_propagation()`, qui opère directement sur une matrice de similarités.
+
+### La classe `AffinityPropagation`
+
+L'usage typique consiste à instancier la classe avec les paramètres souhaités, puis à appeler la méthode `fit(X)` sur les données :
+
+```python
+from sklearn.cluster import AffinityPropagation
+clustering = AffinityPropagation(random_state = 42).fit(X)
+```
+
+Ses paramètres recouvrent pour l'essentiel ceux du package R :
+
+- `preference` : la préférence des observations, équivalente au paramètre `p` de `apcluster`. Comme en R, elle peut être un scalaire ou un vecteur, et sa valeur par défaut (`None`) correspond à la **médiane des similarités**, ce qui conduit à un nombre modéré de clusters ; la documentation suggère d'utiliser le minimum des similarités pour obtenir moins de clusters.
+- `damping` : le facteur d'**amortissement** des messages, compris dans $[0{,}5 ; 1[$, avec une valeur par défaut de 0,5. On notera une différence de philosophie avec `apcluster` : la valeur par défaut est ici minimale (convergence rapide), là où le package R privilégie un amortissement fort (0,9) plus stable. Pour comparer équitablement les deux implémentations, il conviendra donc d'aligner explicitement ce paramètre.
+- `max_iter` et `convergence_iter` : le nombre maximal d'itérations (200 par défaut) et le nombre d'itérations consécutives sans changement du nombre de clusters déclenchant l'arrêt (15 par défaut). Ces valeurs sont nettement plus restrictives que celles de `apcluster` (1000 et 100), ce qui peut conduire à des arrêts prématurés si l'amortissement est augmenté.
+- `affinity` : le type de similarité. Avec la valeur par défaut `"euclidean"`, la matrice de similarités est calculée en interne comme l'**opposé de la distance euclidienne au carré** entre les observations, ce qui correspond exactement à `negDistMat(r = 2)` ; avec `"precomputed"`, l'utilisateur fournit directement sa propre matrice de similarités, ce qui ouvre la possibilité d'utiliser n'importe quelle mesure, comme le permettent les fonctions `expSimMat`, `linSimMat` ou `corSimMat` du package R.
+- `random_state` : la graine du générateur aléatoire, qui joue le même rôle que le paramètre `seed` de `apcluster` : l'implémentation ajoute elle aussi un bruit aléatoire infime à la matrice de similarités pour lever les égalités, et fixer cette graine garantit la reproductibilité.
+
+À l'issue de l'ajustement, les résultats sont disponibles sous forme d'attributs de l'objet : `cluster_centers_indices_` contient les **indices des exemplaires** retenus (des observations réelles du jeu de données, conformément au principe de l'algorithme), `labels_` le numéro de cluster attribué à chaque observation, `affinity_matrix_` la matrice de similarités utilisée, et `n_iter_` le nombre d'itérations effectuées avant l'arrêt. Un avertissement (`ConvergenceWarning`) est émis si l'algorithme n'a pas convergé dans la limite de `max_iter`, auquel cas les résultats peuvent être dégénérés et doivent être interprétés avec prudence.
+
+La fonction `affinity_propagation(S, ...)` offre la même fonctionnalité sous forme procédurale : elle prend en entrée une matrice de similarités `S` et renvoie directement le couple `(cluster_centers_indices, labels)`.
+
+## C. Synthèse comparative et choix pour notre application
+
+Les deux implémentations reposent sur le même algorithme de propagation de messages [@frey2007clustering] et partagent l'essentiel de leurs paramètres, comme le résume le tableau ci-dessous.
+
+| Aspect | R — `apcluster` 1.4.14 | Python — scikit-learn 1.9.1 |
+|---|---|---|
+| Fonction / classe principale | `apcluster()` | `AffinityPropagation` |
+| Préférence | `p` (auto via quantile `q`, médiane par défaut) | `preference` (médiane par défaut) |
+| Amortissement des messages | `lam = 0,9` | `damping = 0,5` |
+| Nombre max. d'itérations | `maxits = 1000` | `max_iter = 200` |
+| Itérations de convergence | `convits = 100` | `convergence_iter = 15` |
+| Similarité euclidienne (opposée, au carré) | `negDistMat(r = 2)` | `affinity = "euclidean"` (défaut) |
+| Matrice de similarités fournie | argument `s` (dense ou creuse) | `affinity = "precomputed"` |
+| Graine aléatoire | `seed` | `random_state` |
+| Aide au choix de la préférence | `preferenceRange()` | — |
+| Nombre de clusters cible | `apclusterK()` | — |
+| Grands jeux de données | `apclusterL()` (leveraged AP), matrices creuses | — |
+| Fusion de clusters / dendrogramme | `aggExCluster()`, `cutree()` | — |
+| Visualisation intégrée | `plot()`, `heatmap()` | — (via matplotlib) |
+
+Deux différences pratiques méritent d'être soulignées. Premièrement, les **valeurs par défaut ne coïncident pas** : l'amortissement et les critères d'arrêt sont plus prudents dans `apcluster`. Une comparaison équitable des deux implémentations exigera donc d'aligner explicitement la similarité, la préférence, l'amortissement et les limites d'itérations, faute de quoi les écarts observés traduiraient les réglages plutôt que les implémentations. Deuxièmement, le package R est plus complet fonctionnellement : l'aide au choix de la préférence, la recherche d'un nombre cible de clusters, la variante *leveraged* pour les grandes données, le clustering agglomératif fondé sur les exemplaires et les visualisations intégrées n'ont pas d'équivalent dans scikit-learn, où l'utilisateur doit les programmer lui-même ou s'en passer.
+
+Pour notre application sur le jeu de données Iris (section IV), nous utiliserons les deux implémentations avec une similarité euclidienne négative au carré et des réglages alignés, ce qui permettra à la fois d'illustrer l'usage concret de chaque outil et de juger lequel offre le cadre le plus confortable pour un utilisateur de clustering.
